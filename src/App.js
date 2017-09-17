@@ -3,6 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 import CarItem from './CarItem';
 import CarForm from './CarForm';
+import FilterComponent from './FilterComponent';
+import { Table } from 'reactstrap';
+
 
 
 const url = "http://localhost:1234/automobiles";
@@ -16,12 +19,15 @@ class App extends Component {
     super(props);
     this.addCar = this.addCar.bind(this);
     this.removeCar = this.removeCar.bind(this);
-    //this.fetchUser = this.bind(this);
+    this.searchCar = this.searchCar.bind(this);
+
+
     this.fetchUser();
     this.state = {
-      cars: []
+      cars: [],
+      backUpCars: [],
     };
-
+    console.log("HVA ER TESTARR: " + JSON.stringify(this.state.testArr))
 
   }
 
@@ -36,6 +42,7 @@ class App extends Component {
 
 
   addCar(car) {
+    console.log("HVA ER BILNAVN: " + car.name)
     fetch(url, {
       method: "POST",
       headers: new Headers({
@@ -51,6 +58,7 @@ class App extends Component {
   }
 
   removeCar(id) {
+
     fetch(`${url}/${id}`, {
       method: "DELETE",
       headers: new Headers({
@@ -59,12 +67,31 @@ class App extends Component {
       }),
     })
       .then(res => {
-        this.fetchUser();
+        this.setState(prevState => ({
+          cars: prevState.cars.filter(x => x._id !== id)
+        }));
       })
       .catch(err => document.write(err));
   }
 
-  //NEW IMPLEMENTATION
+  searchCar(name) {   
+    var possibleSearchResult = this.state.cars.filter(x => x.name === name);
+    if (possibleSearchResult.length > 0) {
+      this.setState(x => ({
+        backUpCars: this.state.cars,
+        cars: possibleSearchResult,
+        foundResult: true
+      }));
+    }
+   
+    if (this.state.foundResult) {
+      this.setState(x => ({
+        cars: this.state.backUpCars
+      }));
+    }
+    this.state.foundResult = false;
+  }
+
   render() {
     return (
       <div className="App">
@@ -73,46 +100,53 @@ class App extends Component {
           <h2>Car wishlist</h2>
         </div>
 
-        <div>
-          <CarForm addCar={this.addCar} />
-        </div>
-        {
-          <ul>
-            {this.state.cars.map((currentCar) => (
-              <CarItem car={currentCar}
-                removeCar={this.removeCar}
+        <Table bordered>
+          <thead>
+            <tr>
+              <th>Legg til</th>
+              <th>Filtrer</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <th scope="row"><CarForm addCar={this.addCar} /></th>
+              <th scope="row"><FilterComponent
+                searchCar={this.searchCar}
                 />
+              </th>
+            </tr>
+
+          </tbody>
+        </Table>
+
+        <Table bordered>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {this.state.cars.map((currentCar) => (
+              <tr>
+                <th scope="row">1</th>
+                <td>
+                  <CarItem
+                    key={currentCar._id}
+                    removeCar={this.removeCar}
+                    car={currentCar} />
+                </td>
+              </tr>
             ))}
-          </ul>
-        }
+          </tbody>
+        </Table>
       </div>
     );
+
   }
 
-  //ORIGINAL
-  /*render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Car wishlist</h2>
-        </div>
-
-        <div>
-          <CarForm addCar={this.addCar} />
-        </div>
-
-
-        <div>
-          <ul>
-            {this.state.car.map((currentCar) => (
-              <CarItem car={currentCar} />
-            ))}
-          </ul>
-        </div>
-      </div>
-    );
-  }*/
 }
 
 export default App;

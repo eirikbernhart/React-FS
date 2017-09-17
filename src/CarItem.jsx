@@ -8,39 +8,24 @@ class CarItem extends Component {
         this.carName = props.car.name;
         this.id = props.car._id;
         this.handleRemoveCar = this.handleRemoveCar.bind(this);
+
     }
 
     handleRemoveCar(id) {
-        //console.log("Hva er carName: " + id)
         this.props.removeCar(id);
     }
 
-    //NEW IMPLEMENTATION
     render(props) {
         return (
             <div className="itemContent">
-            {JSON.stringify(this.carName)}
-            {JSON.stringify(this.id)}
-            <span className="closebtn"
-                onClick={() => this.handleRemoveCar(this.id)}>
-                &times;
+                {JSON.stringify(this.carName)}
+                <span className="closebtn"
+                    onClick={() => this.handleRemoveCar(this.id)}>
+                    &times;
             </span>
-        </div>
+            </div>
         );
     }
 }
-
-//ORIGINAL
-/*const CarItem = (props) => {
-    return (
-        <div className="itemContent">
-            {JSON.stringify(props.car.name)}
-            <span className="closebtn"
-                onClick={() => this.handleRemoveCar(this.carName)}>
-                &times;
-            </span>
-        </div>
-    );
-}*/
 
 export default CarItem;
