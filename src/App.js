@@ -27,22 +27,26 @@ class App extends Component {
       cars: [],
       backUpCars: [],
     };
-    console.log("HVA ER TESTARR: " + JSON.stringify(this.state.testArr))
-
   }
 
   fetchUser() {
     fetch(url)
-      .then(response => response.json())
-      .then(res => this.setState({
+      .then(response => {
+       return response = response.json()
+      })
+      .then(res => {
+        console.log("RES: " + JSON.stringify(res))
+        this.setState({
         cars: res
-      }))
+        })
+      })
       .catch(err => document.write(err));
   }
 
 
   addCar(car) {
-    console.log("HVA ER BILNAVN: " + car.name)
+    console.log("HVA ER CAR 1: " + JSON.stringify(car))
+    let recivedCar = car
     fetch(url, {
       method: "POST",
       headers: new Headers({
@@ -52,7 +56,14 @@ class App extends Component {
       body: JSON.stringify(car)
     })
       .then(res => {
-        this.fetchUser();
+        //this.fetchUser();
+            console.log("HVA ER CAR 2: " + JSON.stringify(recivedCar))
+
+        this.setState(s => ({
+          cars: this.state.cars.concat(car)
+          //cars: this.state.cars.concat({"_id":"846564887246012600000000","name":"daw","price":1234,"__v":0})//DETTE ER TYDELIGVIS GREIT....
+
+        }));
       })
       .catch(err => document.write(err));
   }
