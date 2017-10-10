@@ -1,15 +1,25 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
+import reducers from './reducers';
+
+
 import CarItem from './CarItem';
 import CarForm from './CarForm';
 import FilterComponent from './FilterComponent';
+
+import SignIn from  './SignIn';
+import SignUp from './SignUp';
+
 import { Table } from 'reactstrap';
 
 
 
 const url = "http://localhost:1234/automobiles";
-
+const store = createStoreWithMiddleware(reducers);
 
 
 class App extends Component {

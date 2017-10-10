@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "body-parser": "^1.17.2",
-    "cors": "^2.8.4"
+    "cors": "^2.8.4",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2"
   },
   "name": "src",
   "version": "1.0.0",
