@@ -1,173 +1,67 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
-import reducers from './reducers';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
 
 
-import CarItem from './CarItem';
-import CarForm from './CarForm';
-import FilterComponent from './FilterComponent';
+//PAGES
+import LoginPage from './components/LoginPage';
+import RegistrationPage from './components/RegistrationPage';
+import MainPage from './components/MainPage';
+import NotFoundPage from './components/NotFoundPage';
 
-import SignIn from  './SignIn';
-import SignUp from './SignUp';
+//COMPONENTS
+import HeaderComponent from './components/HeaderComponent';
 
-import { Table } from 'reactstrap';
+//ROUTERS
+import AppRouter from './components/routers/AppRouter';
 
+const url = "https://api.mlab.com/api/1/databases/automobiles/collections/authenticatedUsers?apiKey=9fY51lB2S10nmmu-pZ-sF5xUJ_eYhPcL";
 
-
-const url = "http://localhost:1234/automobiles";
-const store = createStoreWithMiddleware(reducers);
-
+const testUser = {
+  "username":"test3",
+  "passwordHash":"testpass3"
+}
 
 class App extends Component {
 
-
   constructor(props) {
     super(props);
-    this.addCar = this.addCar.bind(this);
-    this.removeCar = this.removeCar.bind(this);
-    this.searchCar = this.searchCar.bind(this);
-
-
-    this.fetchUser();
-    this.state = {
-      cars: [],
-      backUpCars: [],
-    };
+    this.testPost = this.testPost.bind(this);
   }
 
-  fetchUser() {
-    fetch(url)
-      .then(response => {
-       return response = response.json()
-      })
-      .then(res => {
-        console.log("RES: " + JSON.stringify(res))
-        this.setState({
-        cars: res
-        })
-      })
-      .catch(err => document.write(err));
-  }
+  
 
-
-  addCar(car) {
-    console.log("HVA ER CAR 1: " + JSON.stringify(car))
-    let recivedCar = car
+  testPost() {
     fetch(url, {
       method: "POST",
       headers: new Headers({
         'Content-Type': 'application/json',
         Accept: 'application/json',
       }),
-      body: JSON.stringify(car)
+      body: JSON.stringify(testUser)
     })
-      .then(res => {
-        //this.fetchUser();
-            console.log("HVA ER CAR 2: " + JSON.stringify(recivedCar))
-
-        this.setState(s => ({
-          cars: this.state.cars.concat(car)
-          //cars: this.state.cars.concat({"_id":"846564887246012600000000","name":"daw","price":1234,"__v":0})//DETTE ER TYDELIGVIS GREIT....
-
-        }));
-      })
-      .catch(err => document.write(err));
-  }
-
-  removeCar(id) {
-
-    fetch(`${url}/${id}`, {
-      method: "DELETE",
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      }),
+    .then(res => {
+      //Manipulate view
     })
-      .then(res => {
-        this.setState(prevState => ({
-          cars: prevState.cars.filter(x => x._id !== id)
-        }));
-      })
-      .catch(err => document.write(err));
-  }
-
-  searchCar(name) {   
-    var possibleSearchResult = this.state.cars.filter(x => x.name === name);
-    if (possibleSearchResult.length > 0) {
-      this.setState(x => ({
-        backUpCars: this.state.cars,
-        cars: possibleSearchResult,
-        foundResult: true
-      }));
-    }
-   
-    if (this.state.foundResult) {
-      this.setState(x => ({
-        cars: this.state.backUpCars
-      }));
-    }
-    this.state.foundResult = false;
   }
 
   render() {
     return (
       <div className="App">
-        <div className="App-header">
+        <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Car wishlist</h2>
-        </div>
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <AppRouter/>
+        <button onClick={this.testPost}>add user</button>
 
-        <Table bordered>
-          <thead>
-            <tr>
-              <th>Legg til</th>
-              <th>Filtrer</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <th scope="row"><CarForm addCar={this.addCar} /></th>
-              <th scope="row"><FilterComponent
-                searchCar={this.searchCar}
-                />
-              </th>
-            </tr>
-
-          </tbody>
-        </Table>
-
-        <Table bordered>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>First Name</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {this.state.cars.map((currentCar) => (
-              <tr>
-                <th scope="row">1</th>
-                <td>
-                  <CarItem
-                    key={currentCar._id}
-                    removeCar={this.removeCar}
-                    car={currentCar} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+           
       </div>
     );
-
   }
-
 }
 
 export default App;
+
+
