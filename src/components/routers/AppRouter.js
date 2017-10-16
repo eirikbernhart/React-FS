@@ -17,7 +17,7 @@ class AppRouter extends Component {
                         <div>
                         <HeaderComponent/>
                         <Switch>
-                            <Route path="/" component = { LoginPage } exact = { true }/>
+                            <Route path="/" component = { LoginPage } exact = { true }/>    
                             <Route path="/register" component = { RegistrationPage } exact = { true }/>   
                             <Route path="/main" component = { MainPage } exact = { true }/> 
                             <Route component = { NotFoundPage }/>                
@@ -30,6 +30,13 @@ class AppRouter extends Component {
     
 };
 
+//<Route path="/" component = { LoginPage } exact = { true }/>
+/**
+ * <Route path="/" exact = {true} render={(props) => (
+    <LoginPage {...props} login={this.props.loginUser} />
+    )}
+/>
+ */
 export default AppRouter;
 
 

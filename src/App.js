@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 
 //PAGES
@@ -14,38 +14,95 @@ import NotFoundPage from './components/NotFoundPage';
 import HeaderComponent from './components/HeaderComponent';
 
 //ROUTERS
-import AppRouter from './components/routers/AppRouter';
+//import AppRouter from './components/routers/AppRouter'; //ADDED MORE COMPLEXITY
 
-const url = "https://api.mlab.com/api/1/databases/automobiles/collections/authenticatedUsers?apiKey=9fY51lB2S10nmmu-pZ-sF5xUJ_eYhPcL";
+const urlRemote = "https://api.mlab.com/api/1/databases/automobiles/collections/authenticatedUsers?apiKey=9fY51lB2S10nmmu-pZ-sF5xUJ_eYhPcL";
+const urlNewUser = "http://localhost:1234/users"
+const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
+
 
 const testUser = {
-  "username":"test3",
-  "passwordHash":"testpass3"
+  "username":"testuser",
+  "passwordHash":"testpass"
 }
+
+
+
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    this.testPost = this.testPost.bind(this);
+    this.testPost = this.registerUser.bind(this);
+    this.getToken = this.getToken.bind(this);
+    this.loginUser = this.loginUser.bind(this);
+    this.registerUser = this.registerUser.bind(this);
+
+    this.state = {
+      authenticated: false,
+      cars: [],
+      backUpCars: [],
+    };
+
+  }
+
+  componentWillMount() {
+    localStorage.token = "";
+    this.getToken();
+  }
+
+  //LETS USER NAVIGATE TO MAINPAGE
+  getToken() {
+    fetch(urlAutomobiles, {
+      headers: {
+        'X-Token': localStorage.token,
+      }
+    })
+    .then(res => {
+      if(res.status === 200) { //NEEDS THIS CHECK BECAUSE FETCH FAILS WHILE USER IS UNAUTHENTICATED!
+        return res = res.json();            
+      }
+    })
+    .then(res2 =>{
+      this.setState({
+        cars: res2
+      })
+    })
+    console.log("Is token empty: " + localStorage.token);
+    console.log("User authenticated: " + this.state.authenticated);
   }
 
   
+    
+  
 
-  testPost() {
-    fetch(url, {
-      method: "POST",
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      }),
-      body: JSON.stringify(testUser)
-    })
-    .then(res => {
-      //Manipulate view
-    })
-  }
+  
+  
 
+   registerUser() {
+      fetch(urlNewUser, {
+        method: "POST",
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        }),
+        body: JSON.stringify(testUser)
+      })
+      .then(res => res.text())
+      .then(token => {
+        localStorage.token = token
+        console.log("Token from client: " + token);
+        this.setState({
+          authenticated: true
+        })
+      });
+    }
+
+    loginUser() {
+      console.log("loginUser from app.js")
+    }
+
+    
   render() {
     return (
       <div className="App">
@@ -53,14 +110,39 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <AppRouter/>
-        <button onClick={this.testPost}>add user</button>
+        <BrowserRouter>
+          <div>
+            <HeaderComponent/>
+              <Switch>
+
+                  <Route path="/" exact 
+                    render={(props) => (
+                      <LoginPage {...props} loginUser={this.loginUser} auth={this.state.authenticated}/>
+                    )}
+                  />   
+
+                  <Route path="/register" component = { RegistrationPage }/> 
+
+                  <Route path="/main" exact
+                    render={(props) => (
+                      <MainPage {...props} auth={this.state.authenticated} cars={this.state.cars}/>
+                    )}
+                  /> 
+
+                  <Route component = { NotFoundPage }/>     
+
+              </Switch>
+            </div>
+          </BrowserRouter>     
+        <button onClick={this.registerUser}>add user</button> 
+        <button onClick={this.getToken}>test token</button>
 
            
       </div>
     );
   }
 }
+
 
 export default App;
 

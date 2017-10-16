@@ -11,7 +11,7 @@ class RegistrationPage extends Component {
          return (
             <div>
                 <header>
-                <p><strong>SIGN UP!</strong></p>
+                <p><strong>SIGN UP</strong></p>
                 <br></br>
                 </header>
                 <Form>
