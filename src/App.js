@@ -18,7 +18,6 @@ import HeaderComponent from './components/HeaderComponent';
 
 const urlRemote = "https://api.mlab.com/api/1/databases/automobiles/collections/authenticatedUsers?apiKey=9fY51lB2S10nmmu-pZ-sF5xUJ_eYhPcL";
 const urlNewUser = "http://localhost:1234/users"
-const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
 
 
 const testUser = {
@@ -26,6 +25,7 @@ const testUser = {
   "passwordHash":"testpass"
 }
 
+const authenticatedResponse = '';
 
 
 
@@ -34,43 +34,23 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.testPost = this.registerUser.bind(this);
-    this.getToken = this.getToken.bind(this);
     this.loginUser = this.loginUser.bind(this);
     this.registerUser = this.registerUser.bind(this);
 
     this.state = {
-      authenticated: false,
-      cars: [],
-      backUpCars: [],
+      authenticated: false
+      //cars: [],
+      //backUpCars: [],
     };
 
   }
 
   componentWillMount() {
-    localStorage.token = "";
-    this.getToken();
+    
   }
 
   //LETS USER NAVIGATE TO MAINPAGE
-  getToken() {
-    fetch(urlAutomobiles, {
-      headers: {
-        'X-Token': localStorage.token,
-      }
-    })
-    .then(res => {
-      if(res.status === 200) { //NEEDS THIS CHECK BECAUSE FETCH FAILS WHILE USER IS UNAUTHENTICATED!
-        return res = res.json();            
-      }
-    })
-    .then(res2 =>{
-      this.setState({
-        cars: res2
-      })
-    })
-    console.log("Is token empty: " + localStorage.token);
-    console.log("User authenticated: " + this.state.authenticated);
-  }
+  
 
   
     
@@ -125,7 +105,7 @@ class App extends Component {
 
                   <Route path="/main" exact
                     render={(props) => (
-                      <MainPage {...props} auth={this.state.authenticated} cars={this.state.cars}/>
+                      <MainPage {...props} auth={this.state.authenticated} authenticatedResponse={this.authenticatedResponse}/>
                     )}
                   /> 
 
@@ -135,7 +115,6 @@ class App extends Component {
             </div>
           </BrowserRouter>     
         <button onClick={this.registerUser}>add user</button> 
-        <button onClick={this.getToken}>test token</button>
 
            
       </div>

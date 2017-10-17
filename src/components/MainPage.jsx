@@ -5,7 +5,8 @@ import CarForm from './CarForm';
 import FilterComponent from './FilterComponent';
 
   
-const url = "http://localhost:1234/automobiles";
+const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
+
 
 
 class MainPage extends Component {
@@ -14,39 +15,71 @@ class MainPage extends Component {
         super(props);
 
         this.searchCar = this.searchCar.bind(this);
-        this.addCar = this.addCar.bind(this);
+        this.addAutomobile = this.addAutomobile.bind(this);
         this.removeCar = this.removeCar.bind(this);
+        this.getAutomobiles = this.getAutomobiles.bind(this);
+        
+
+
+        console.log("(MainPage)State from props: " + JSON.stringify(props.cars));
 
         this.state = {
-            cars: props.cars,
-            backUpCars: props.backUpCars
+            cars: [],
+            backUpCars: []
         };
     }
 
-    addCar(car) {
-    console.log("HVA ER CAR 1: " + JSON.stringify(car))
-    let recivedCar = car
-    fetch(url, {
-      method: "POST",
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+    componentWillMount() {
+        if(localStorage.token) {
+            this.getAutomobiles();
+        }
+        this.getAutomobiles();
+    }
+
+    getAutomobiles() {
+        fetch(urlAutomobiles, {
+          headers: {
+            'X-Token': localStorage.token,
+          }
+        })
+        .then(res => {
+          if(res.status === 200) { //NEEDS THIS CHECK BECAUSE FETCH FAILS WHILE USER IS UNAUTHENTICATED!
+            return res = res.json();            
+          }
+        })
+        .then(res =>{
+          this.setState({
+            cars: res
+          })
+          
+        })
+        
+      }
+
+    addAutomobile(automobile) {
+
+        fetch(urlAutomobiles, {
+            method: "POST",
+            headers: new Headers({
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
       }),
-      body: JSON.stringify(car)
+      body: JSON.stringify(automobile)
     })
       .then(res => {
-            console.log("HVA ER CAR 2: " + JSON.stringify(recivedCar))
+            console.log("HVA ER CAR FRA addCar MainPage: " + JSON.stringify(automobile))
 
-        this.setState(s => ({
-          cars: this.state.cars.concat(car)
-        }));
+        this.setState({
+            cars: this.state.cars.concat(automobile)
+        });
+        console.log("Ble staten oppdatert: " + JSON.stringify(this.state.cars));
       })
       .catch(err => document.write(err));
   }
 
   removeCar(id) {
 
-    fetch(`${url}/${id}`, {
+    fetch(`${urlAutomobiles}/${id}`, {
       method: "DELETE",
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -106,7 +139,7 @@ class MainPage extends Component {
 
                             <tbody>
                                 <tr>
-                                    <th scope="row"><CarForm addCar={this.addCar} /></th>
+                                    <th scope="row"><CarForm addCar={this.addAutomobile} /></th>
                                     <th scope="row"><FilterComponent
                                         searchCar={this.searchCar}
                                     />
@@ -125,13 +158,12 @@ class MainPage extends Component {
                             </thead>
 
                             <tbody>
-                                {this.props.cars.map((currentCar, i) => (
-                                    <tr>
+                                {this.state.cars.map((currentCar, i) => (
+                                    <tr key = {currentCar._id}>
                                         <th scope="row">1</th>
                                         <td>
                                         <CarItem
-                                            //key={console.log("Funker key: " + currentCar._id)}//VISER FORSKJELLIGE ID-er!...
-                                            key={i}
+                             
                                             removeCar={this.removeCar}
                                             car={currentCar} />
                                         </td>

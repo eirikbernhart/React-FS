@@ -91,6 +91,7 @@ app.get('/automobiles', (req, res) => {
     }
 })
 
+
 app.post('/automobiles', (req, res) => {
     console.log('Blir POST kjørt?')
     const body = req.body;
