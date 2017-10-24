@@ -12,8 +12,14 @@ class RegistrationPage extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            username: '',
+            password: ''
+        }
 
         this.registerUser = this.registerUser.bind(this);
+        this.handleUsername = this.handleUsername.bind(this);
+        this.handlePassword = this.handlePassword.bind(this);
 
     }
 
@@ -21,7 +27,12 @@ class RegistrationPage extends Component {
 
     registerUser() {
 
-        const urlNewUser = "http://localhost:1234/users"
+    const urlNewUser = "http://localhost:1234/users"
+
+    const body = {
+            username: this.state.username,
+            password: this.state.password
+    }
 
       fetch(urlNewUser, {
         method: "POST",
@@ -29,7 +40,7 @@ class RegistrationPage extends Component {
           'Content-Type': 'application/json',
           Accept: 'application/json'
         }),
-        body: JSON.stringify(testUser)
+        body: JSON.stringify(body)
       })
       .then(res => res.text())
       .then(token => {
@@ -39,6 +50,18 @@ class RegistrationPage extends Component {
             this.props.auth(true);
         }
       });
+    }
+
+    handleUsername(e) {
+        this.setState({
+            username: e.target.value
+        })
+    }
+
+    handlePassword(e) {
+        this.setState({
+            password: e.target.value
+        })
     }
 
 
@@ -52,15 +75,32 @@ class RegistrationPage extends Component {
                 <Form>
                     <FormGroup>
                         <Label for="exampleEmail">Email</Label>
-                        <Input type="email" name="email" id="exampleEmail" placeholder="example@mail.com" />
+                        <Input 
+                            type="email" 
+                            name="email" 
+                            id="exampleEmail" 
+                            placeholder="example@mail.com"                          
+                        />
                     </FormGroup>
                     <FormGroup>
-                    <Label for="userName">Email</Label>
-                    <Input type="username" name="username" id="userName" placeholder="Username..." />
+                        <Label for="userName">Username</Label>
+                        <Input 
+                            type="username" 
+                            name="username" 
+                            id="userName" 
+                            placeholder="Username..." 
+                            onChange={this.handleUsername} 
+                        />
                 </FormGroup>
                     <FormGroup>
                         <Label for="examplePassword">Password</Label>
-                        <Input type="password" name="password" id="examplePassword" placeholder="password..." />
+                        <Input 
+                            type="password" 
+                            name="password" 
+                            id="examplePassword" 
+                            placeholder="password..." 
+                            onChange={this.handlePassword} 
+                        />
                     </FormGroup>
                     <Button 
                         color="danger"

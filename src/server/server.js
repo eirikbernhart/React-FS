@@ -78,7 +78,7 @@ app.post('/users', (req, res) => {
 
     const newUser = new User({
         username: req.body.username,
-        passwordHash: bcrypt.hashSync(req.body.passwordHash, 10)
+        passwordHash: bcrypt.hashSync(req.body.password, 10)
     });    
 
     let user = new User(newUser);
@@ -89,7 +89,6 @@ app.post('/users', (req, res) => {
         const token = jwt.encode({
             username
         }, secret);
-        //res.send(savedUser); 
         res.send(token); 
     })
 })

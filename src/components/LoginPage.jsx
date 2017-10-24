@@ -15,9 +15,10 @@ class LoginPage extends Component {
             password: ''
         }
 
+        
+        this.login = this.login.bind(this);
         this.handleUsername = this.handleUsername.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
-        this.login = this.login.bind(this);
     }
 
     
@@ -31,7 +32,7 @@ class LoginPage extends Component {
         }
 
         fetch(urlUserAuth, {
-            method: 'post',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
 
@@ -57,6 +58,20 @@ class LoginPage extends Component {
             }
         });
     }
+
+
+    handleUsername(e) {
+        this.setState({
+            username: e.target.value
+        })
+    }
+
+    handlePassword(e) {
+        this.setState({
+            password: e.target.value
+        })
+    }
+
 
 
 
@@ -100,18 +115,7 @@ class LoginPage extends Component {
          )
     }
 
-    handleUsername(e) {
-        this.setState({
-            username: e.target.value
-        })
-    }
-
-    handlePassword(e) {
-        this.setState({
-            password: e.target.value
-        })
-    }
-
+    
     
 
 
