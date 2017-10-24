@@ -1,5 +1,4 @@
 
-//DEPENDENCIES
 const express = require('express');
 const jwt = require('jwt-simple');
 const bodyParser = require('body-parser');
