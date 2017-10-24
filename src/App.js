@@ -34,13 +34,12 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.testPost = this.registerUser.bind(this);
-    this.loginUser = this.loginUser.bind(this);
     this.registerUser = this.registerUser.bind(this);
+    this.authenticate = this.authenticate.bind(this);
+    
 
     this.state = {
       authenticated: false
-      //cars: [],
-      //backUpCars: [],
     };
 
   }
@@ -49,15 +48,12 @@ class App extends Component {
     
   }
 
-  //LETS USER NAVIGATE TO MAINPAGE
-  
+  authenticate(bool) {
+    this.setState({
+      authenticated: bool
+    })
+  }
 
-  
-    
-  
-
-  
-  
 
    registerUser() {
       fetch(urlNewUser, {
@@ -78,9 +74,7 @@ class App extends Component {
       });
     }
 
-    loginUser() {
-      console.log("loginUser from app.js")
-    }
+    
 
     
   render() {
@@ -97,7 +91,7 @@ class App extends Component {
 
                   <Route path="/" exact 
                     render={(props) => (
-                      <LoginPage {...props} loginUser={this.loginUser} auth={this.state.authenticated}/>
+                      <LoginPage {...props} loginUser={this.loginUser} auth = {this.authenticate}/>
                     )}
                   />   
 

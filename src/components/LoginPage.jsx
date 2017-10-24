@@ -3,7 +3,7 @@ import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
   
 
-
+const urlUser = "http://localhost:1234/users";
 
 class LoginPage extends Component {
 
@@ -11,13 +11,30 @@ class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
+            username: 'testuser',
             password: ''
         }
 
         this.handleUsername = this.handleUsername.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
         this.login = this.login.bind(this);
+    }
+
+    login(username) {
+        fetch(urlUser, {
+            headers: {
+                'X-Token': localStorage.token,
+            }
+        })
+        .then(res => {
+            if(res.status === 200) {
+                return res;
+            }
+        })
+        .then(res => {
+            console.log("Userinfo/Token: " + JSON.stringify(res));
+            this.props.auth(true);
+        })
     }
 
 
@@ -74,9 +91,7 @@ class LoginPage extends Component {
         })
     }
 
-    login() {
-        this.props.loginUser();
-    }
+    
 
 
 }

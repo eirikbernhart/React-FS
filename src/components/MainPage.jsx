@@ -47,7 +47,7 @@ class MainPage extends Component {
             return res = res.json();            
           }
         })
-        .then(res =>{
+        .then(res => {
           this.setState({
             cars: res
           })
