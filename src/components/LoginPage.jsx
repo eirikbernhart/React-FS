@@ -12,7 +12,7 @@ class LoginPage extends Component {
         super(props);
         this.state = {
             username: 'testuser',
-            password: ''
+            password: 'testpass'
         }
 
         this.handleUsername = this.handleUsername.bind(this);
@@ -20,7 +20,7 @@ class LoginPage extends Component {
         this.login = this.login.bind(this);
     }
 
-    login(username) {
+    /*loginOrg(username) {
         fetch(urlUser, {
             headers: {
                 'X-Token': localStorage.token,
@@ -35,6 +35,35 @@ class LoginPage extends Component {
             console.log("Userinfo/Token: " + JSON.stringify(res));
             this.props.auth(true);
         })
+    }*/
+
+    login() {
+
+        const urlUserAuth = "http://localhost:1234/usersAuth";
+
+        const body = {
+            username: this.state.username,
+            password: this.state.password
+        }
+
+        fetch(urlUserAuth, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+
+            },
+            body: JSON.stringify(body)
+        })
+        .then(res => res.text())
+        .then(token => {
+            localStorage.token = token
+
+            console.log("Token from client->login " + token)
+
+            if(localStorage.token) {
+                this.props.auth(true);
+            }
+        });
     }
 
 

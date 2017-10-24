@@ -43,8 +43,35 @@ app.get('/users', (req, res) => {
         res.send(users)        
     })
 });
+//LOG IN USER
+app.post('/usersAuth', (req, res) => {
 
-//POST NEW USER
+    // verify username + password
+    const username = req.body.username;
+    const password =  req.body.password;
+
+    User.findOne({username: username})
+        .then(user => {
+            if (!bcrypt.compareSync(password, user.passwordHash)) {
+                res.status(401).send('wrong password');
+            } else {
+
+        // generate token
+        const token = jwt.encode({
+             username
+        }, secret);
+
+        // send token
+          res.send(token);
+        }
+      })
+      .catch(err => {
+        return res.status(401).send('no such user');
+      })
+  });
+
+
+//REGISTER NEW USER
 app.post('/users', (req, res) => {
     const body = req.body;
     const username = req.body.username;
@@ -61,8 +88,7 @@ app.post('/users', (req, res) => {
         }
         const token = jwt.encode({
             username
-        }, 
-        secret);
+        }, secret);
         //res.send(savedUser); 
         res.send(token); 
     })
