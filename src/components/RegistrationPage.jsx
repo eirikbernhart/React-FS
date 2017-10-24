@@ -3,8 +3,43 @@ import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 
 
+const testUser = {
+  "username":"testuser",
+  "passwordHash":"testpass"
+}
 
 class RegistrationPage extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.registerUser = this.registerUser.bind(this);
+
+    }
+
+
+
+    registerUser() {
+
+        const urlNewUser = "http://localhost:1234/users"
+
+      fetch(urlNewUser, {
+        method: "POST",
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        }),
+        body: JSON.stringify(testUser)
+      })
+      .then(res => res.text())
+      .then(token => {
+        localStorage.token = token
+        console.log("Token from client: " + token);
+        if(localStorage.token) {
+            this.props.auth(true);
+        }
+      });
+    }
 
 
      render() {
@@ -27,7 +62,11 @@ class RegistrationPage extends Component {
                         <Label for="examplePassword">Password</Label>
                         <Input type="password" name="password" id="examplePassword" placeholder="password..." />
                     </FormGroup>
-                    <Button color="danger">Submit</Button>          
+                    <Button 
+                        color="danger"
+                        onClick={this.registerUser}>
+                        Submit   
+                    </Button>          
                 </Form>
             </div>
          )

@@ -20,23 +20,7 @@ class LoginPage extends Component {
         this.login = this.login.bind(this);
     }
 
-    /*loginOrg(username) {
-        fetch(urlUser, {
-            headers: {
-                'X-Token': localStorage.token,
-            }
-        })
-        .then(res => {
-            if(res.status === 200) {
-                return res;
-            }
-        })
-        .then(res => {
-            console.log("Userinfo/Token: " + JSON.stringify(res));
-            this.props.auth(true);
-        })
-    }*/
-
+    
     login() {
 
         const urlUserAuth = "http://localhost:1234/usersAuth";

@@ -17,24 +17,11 @@ import HeaderComponent from './components/HeaderComponent';
 //import AppRouter from './components/routers/AppRouter'; //ADDED MORE COMPLEXITY
 
 const urlRemote = "https://api.mlab.com/api/1/databases/automobiles/collections/authenticatedUsers?apiKey=9fY51lB2S10nmmu-pZ-sF5xUJ_eYhPcL";
-const urlNewUser = "http://localhost:1234/users"
-
-
-const testUser = {
-  "username":"testuser",
-  "passwordHash":"testpass"
-}
-
-const authenticatedResponse = '';
-
-
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-    this.testPost = this.registerUser.bind(this);
-    this.registerUser = this.registerUser.bind(this);
     this.authenticate = this.authenticate.bind(this);
     
 
@@ -55,28 +42,7 @@ class App extends Component {
   }
 
 
-   registerUser() {
-      fetch(urlNewUser, {
-        method: "POST",
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        }),
-        body: JSON.stringify(testUser)
-      })
-      .then(res => res.text())
-      .then(token => {
-        localStorage.token = token
-        console.log("Token from client: " + token);
-        this.setState({
-          authenticated: true
-        })
-      });
-    }
-
-    
-
-    
+ 
   render() {
     return (
       <div className="App">
@@ -91,11 +57,16 @@ class App extends Component {
 
                   <Route path="/" exact 
                     render={(props) => (
-                      <LoginPage {...props} loginUser={this.loginUser} auth = {this.authenticate}/>
+                      <LoginPage {...props} auth = {this.authenticate}/>
                     )}
                   />   
 
-                  <Route path="/register" component = { RegistrationPage }/> 
+
+                  <Route path="/register" exact 
+                    render={(props) => (
+                      <RegistrationPage {...props}  auth = {this.authenticate}/>
+                    )}
+                  />
 
                   <Route path="/main" exact
                     render={(props) => (
@@ -108,7 +79,7 @@ class App extends Component {
               </Switch>
             </div>
           </BrowserRouter>     
-        <button onClick={this.registerUser}>add user</button> 
+        
 
            
       </div>
@@ -118,5 +89,6 @@ class App extends Component {
 
 
 export default App;
+
 
 
