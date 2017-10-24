@@ -21,7 +21,7 @@ class MainPage extends Component {
         
 
 
-        console.log("(MainPage)State from props: " + JSON.stringify(props.cars));
+        //console.log("(MainPage)State from props: " + JSON.stringify(props.cars));
 
         this.state = {
             cars: [],

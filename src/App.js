@@ -36,6 +36,9 @@ class App extends Component {
   }
 
   authenticate(bool) {
+
+    console.log("authenticate(bool) ran")
+
     this.setState({
       authenticated: bool
     })

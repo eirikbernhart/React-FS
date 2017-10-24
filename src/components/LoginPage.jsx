@@ -11,8 +11,8 @@ class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: 'testuser',
-            password: 'testpass'
+            username: '',
+            password: ''
         }
 
         this.handleUsername = this.handleUsername.bind(this);
@@ -38,7 +38,15 @@ class LoginPage extends Component {
             },
             body: JSON.stringify(body)
         })
-        .then(res => res.text())
+        .then(res => {
+            if(res.status === 401) {
+                console.log("NO SUCH USER MODDAFAKKA!")
+                throw 0; //Rather silly way of exiting promise-chain...
+            } else {
+                console.log("USER FOUND, YEY!")
+                return res.text()
+            }
+        })
         .then(token => {
             localStorage.token = token
 
