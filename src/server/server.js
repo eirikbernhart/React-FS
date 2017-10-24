@@ -93,6 +93,8 @@ app.post('/users', (req, res) => {
 })
 
 //GET BASED ON VALID TOKEN
+//'/automobiles'
+//'/automobiles/users/59ef5b30dddd2b07cca0e470'
 app.get('/automobiles', (req, res) => {
     const token = req.header('X-Token');
 
@@ -102,7 +104,6 @@ app.get('/automobiles', (req, res) => {
 
     const user = jwt.decode(token, secret);
     console.log("You are authorized from server with jwt: " + JSON.stringify(user));
-    if(user.username == 'testuser') {
         Automobile.find((err, automobiles) => {
             if(err) {
                 res.status(500).send(err);
@@ -112,10 +113,11 @@ app.get('/automobiles', (req, res) => {
             
             res.send(automobiles)
         }) 
-    }
+    
 })
 
-
+//'/automobiles'
+//'/automobiles/users/59ef5b30dddd2b07cca0e470'
 app.post('/automobiles', (req, res) => {
     console.log('Blir POST kjørt?')
     const body = req.body;
@@ -130,7 +132,6 @@ app.post('/automobiles', (req, res) => {
 });
 
 app.delete('/automobiles/:_id', (req, res) => {
-    console.log('Blir DELETE kjørt?')
     const id = req.params._id;
     Automobile.remove({ '_id' : id}, (err)=> {
         if(err) {

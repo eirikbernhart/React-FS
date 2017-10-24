@@ -59,7 +59,8 @@ class MainPage extends Component {
       }
 
     addAutomobile(automobile) {
-
+        //urlAutomobiles
+        //`${urlAutomobiles}/users/59ef5b30dddd2b07cca0e470`
         fetch(urlAutomobiles, {
             method: "POST",
             headers: new Headers({
