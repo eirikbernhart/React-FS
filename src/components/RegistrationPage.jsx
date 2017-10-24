@@ -48,6 +48,7 @@ class RegistrationPage extends Component {
         console.log("Token from client: " + token);
         if(localStorage.token) {
             this.props.auth(true);
+            this.props.history.push("/main");
         }
       });
     }

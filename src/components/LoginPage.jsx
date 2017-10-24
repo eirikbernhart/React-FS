@@ -55,6 +55,7 @@ class LoginPage extends Component {
 
             if(localStorage.token) {
                 this.props.auth(true);
+                this.props.history.push("/main");
             }
         });
     }

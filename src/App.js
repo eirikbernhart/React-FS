@@ -37,7 +37,7 @@ class App extends Component {
 
   authenticate(bool) {
 
-    console.log("authenticate(bool) ran")
+    console.log("authenticate(bool) ran " + bool)
 
     this.setState({
       authenticated: bool
@@ -73,7 +73,11 @@ class App extends Component {
 
                   <Route path="/main" exact
                     render={(props) => (
-                      <MainPage {...props} auth={this.state.authenticated} authenticatedResponse={this.authenticatedResponse}/>
+                      <MainPage 
+                        {...props} 
+                        authGlobal = {this.state.authenticated} //ATTACHED TO App.js TO CHECK IF PERMISSION IS GRANTED, KINDA POOR LOGIC
+                        auth = {this.authenticate} //METHOD NEEDED IN CHILD
+                        />
                     )}
                   /> 
 
@@ -94,4 +98,5 @@ class App extends Component {
 export default App;
 
 
-
+//<MainPage {...props} auth={this.authenticate} authenticatedResponse={this.authenticatedResponse}/>
+//auth={this.state.authenticated}

@@ -3,6 +3,7 @@ import { Table } from 'reactstrap';
 import CarItem from './CarItem';
 import CarForm from './CarForm';
 import FilterComponent from './FilterComponent';
+import { Button } from 'reactstrap';
 
   
 const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
@@ -18,7 +19,7 @@ class MainPage extends Component {
         this.addAutomobile = this.addAutomobile.bind(this);
         this.removeCar = this.removeCar.bind(this);
         this.getAutomobiles = this.getAutomobiles.bind(this);
-        
+        this.logout = this.logout.bind(this);
 
 
         //console.log("(MainPage)State from props: " + JSON.stringify(props.cars));
@@ -30,10 +31,11 @@ class MainPage extends Component {
     }
 
     componentWillMount() {
-        if(localStorage.token) {
+        //if(this.localstorage.token)
+        if(this.props.auth) {
             this.getAutomobiles();
         }
-        this.getAutomobiles();
+        //this.getAutomobiles();
     }
 
     getAutomobiles() {
@@ -114,14 +116,19 @@ class MainPage extends Component {
     this.state.foundResult = false;
   }
 
+  logout() {
+    this.props.auth(false);
+    this.props.history.push("/");
+  }
+
     
 
 
      render() {
-
+       
         let component;
 
-        if(this.props.auth) {
+        if(this.props.authGlobal === true) {
             component = (
                 
                     <div className="App">
@@ -171,6 +178,10 @@ class MainPage extends Component {
                                 ))}
                             </tbody>
                         </Table>
+                        <Button 
+                        color="danger" 
+                        onClick={this.logout}>Log out
+                    </Button>  
                 </div>
             )
         } else {
