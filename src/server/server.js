@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 })
 
 //SHOW USERS for testing purposes
-app.get('/usersTest', (req, res) => {
+app.get('/users', (req, res) => {
     User.find((err, users) => {
         if(err) {
             res.status(500).send(err);
@@ -44,7 +44,7 @@ app.get('/usersTest', (req, res) => {
     })
 });
 
-//POST/REGISTER NEW USER
+//POST NEW USER
 app.post('/users', (req, res) => {
     const body = req.body;
     const username = req.body.username;
@@ -64,9 +64,8 @@ app.post('/users', (req, res) => {
         }, 
         secret);
         //res.send(savedUser); 
-        
+        res.send(token); 
     })
-    res.send(token); 
 })
 
 //GET BASED ON VALID TOKEN
@@ -90,43 +89,6 @@ app.get('/automobiles', (req, res) => {
             res.send(automobiles)
         }) 
     }
-})
-
-//LOG IN MOCKED USER
-/*app.get('/users', (req, res) => {
-
-    console.log("Req from LoginMock from server: " + JSON.stringify(req));
-    if(req.username === 'testuser') {
-        const token = jwt.encode({
-            username
-        }, 
-        secret);
-
-        res.send(token); 
-    }
-    
-})*/
-
-//LOG IN REAL USER
-app.get('/users', (req, res) => {
-    //console.log("Req from client: " + req.username);  
-    User.findOne((err, users) => {
-        if(err) {
-            res.status(500).send(err);
-            return;
-        }
-
-
-        if(req.username === 'testuser') {
-            
-            const token = jwt.encode({
-                username
-            }, 
-            secret);
-    
-            res.send(token); 
-        }     
-    })  
 })
 
 
