@@ -1,17 +1,32 @@
 import React, { Component } from 'react';
 import './CarForm.css'
 
+const jwt = require('jwt-simple');
+const secret = 'topsecret';
+
 class CarForm extends Component {
     constructor(props) {
         super(props);
+
+        const user = jwt.decode(localStorage.token, secret)
+        console.log("JWT DECODED IN CLIENT, CarForm.JSX: " + JSON.stringify(user.username))
+
         this.state = {
             _id: '',
             name: '',
             price: 1234,
-            __v: 0
+            __v: 0,
+            owner: user.username
         };
         this.handleUserInput = this.handleUserInput.bind(this);
         this.writeNewCar = this.writeNewCar.bind(this);
+
+        
+    }
+
+    componentWillMount() {
+        
+        
     }
 
     //When the user input changes, set the newCarContent to the value of what's in the inputbox

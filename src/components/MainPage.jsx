@@ -5,15 +5,20 @@ import CarForm from './CarForm';
 import FilterComponent from './FilterComponent';
 import { Button } from 'reactstrap';
 
+
+
   
 const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
-
+const jwt = require('jwt-simple');
+const secret = 'topsecret';
 
 
 class MainPage extends Component {
 
     constructor(props) {
         super(props);
+
+        
 
         this.searchCar = this.searchCar.bind(this);
         this.addAutomobile = this.addAutomobile.bind(this);
@@ -39,6 +44,12 @@ class MainPage extends Component {
     }
 
     getAutomobiles() {
+
+       
+
+        const user = jwt.decode(localStorage.token, secret)
+        const url = "http://localhost:1234/automobiles/cars" 
+
         fetch(urlAutomobiles, {
           headers: {
             'X-Token': localStorage.token,
@@ -50,8 +61,11 @@ class MainPage extends Component {
           }
         })
         .then(res => {
-          this.setState({
-            cars: res
+        
+            var userSpesificData = res.filter(x => x.owner === user.username)
+
+            this.setState({
+            cars: userSpesificData
           })
           
         })
@@ -61,6 +75,8 @@ class MainPage extends Component {
     addAutomobile(automobile) {
         //urlAutomobiles
         //`${urlAutomobiles}/users/59ef5b30dddd2b07cca0e470`
+        //const urlUserData = "http://localhost:1234/automobiles/users/" 
+
         fetch(urlAutomobiles, {
             method: "POST",
             headers: new Headers({
@@ -100,7 +116,7 @@ class MainPage extends Component {
    
 
     searchCar(name) {   
-    var possibleSearchResult = this.props.cars.filter(x => x.name === name);
+    var possibleSearchResult = this.state.cars.filter(x => x.name === name);
     if (possibleSearchResult.length > 0) {
       this.setState(x => ({
         backUpCars: this.state.cars,
@@ -166,7 +182,7 @@ class MainPage extends Component {
                             </thead>
 
                             <tbody>
-                                {this.state.cars.map((currentCar, i) => (
+                                {this.state.cars.map((currentCar) => (
                                     <tr key = {currentCar._id}>
                                         <th scope="row">1</th>
                                         <td>

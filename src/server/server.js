@@ -12,15 +12,17 @@ mongoose.connect('mongodb://localhost/automobiles'); //Local db
 const secret = 'topsecret';
 
 //MODEL STRUCTURE
-const User = mongoose.model('User', {
+const User = mongoose.model('users', {
     username: {type: String, required: true},
     passwordHash: {type: String, required: true}
 })
 
-const Automobile = mongoose.model('Car', {
+//MODEL STRUCTURE
+const Automobile = mongoose.model('cars', {
     name: { type: String, required: true },
     price: { type: Number, required: true },
-   });
+    owner: { type: String, required: true }
+});
 
 
 
@@ -103,7 +105,7 @@ app.get('/automobiles', (req, res) => {
     }
 
     const user = jwt.decode(token, secret);
-    console.log("You are authorized from server with jwt: " + JSON.stringify(user));
+    console.log("JWT from client, in GET: " + JSON.stringify(user));
         Automobile.find((err, automobiles) => {
             if(err) {
                 res.status(500).send(err);
@@ -119,10 +121,12 @@ app.get('/automobiles', (req, res) => {
 //'/automobiles'
 //'/automobiles/users/59ef5b30dddd2b07cca0e470'
 app.post('/automobiles', (req, res) => {
-    console.log('Blir POST kjørt?')
+
     const body = req.body;
 
+
     let car = new Automobile(body);
+
      car.save((err, savedCar) => {
         if(err) {
             res.status(500).send(err);
@@ -144,3 +148,10 @@ app.delete('/automobiles/:_id', (req, res) => {
 
 app.listen(1234, () => console.log('LISTENING TO 1234!!!!!!'));
 
+
+/* RANDOM STUFF I MIGHT WANT LATER...
+const UserSpecificAutomobile = mongoose.model(user.username, {
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+    });
+*/
