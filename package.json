@@ -21,6 +21,14 @@
   "dependencies": {
     "expo": "^21.0.0",
     "react": "16.0.0-alpha.12",
-    "react-native": "^0.48.4"
+    "react-native": "^0.48.4",
+    "bootstrap": "^4.0.0-beta",
+    "bootstrap": "^4.0.0-beta",
+    "cors": "^2.8.4",
+    "jwt-simple": "^0.5.1",
+    "mongoose": "^4.12.1",
+    "normalize.css": "^7.0.0",
+    "react-strap": "^0.0.1",
+    "reactstrap": "^5.0.0-alpha.3"
   }
 }
