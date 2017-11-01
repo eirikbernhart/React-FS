@@ -81,7 +81,7 @@ export default class MainPage extends Component {
           price: 1234,
           __v: 0
         }
-        console.log('HVA ER CAR 1: ' + this.state.carName);
+
         let recivedCar = car
         fetch(url, {
           method: "POST",
@@ -92,10 +92,8 @@ export default class MainPage extends Component {
           body: JSON.stringify(car)
         })
           .then(res => {
-                console.log("HVA ER CAR 2: " + JSON.stringify(recivedCar))
       
                 carList = carList.concat(car);
-                console.log("HVA ER CARLIST nå: " + JSON.stringify(carList))
                 
                 var newDatasourceAdd = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2});
       
@@ -112,7 +110,6 @@ export default class MainPage extends Component {
       
       removeCar(id) {
       
-          console.log("removeCar 1")
       
             fetch(`${url}/${id}`, {
               method: "DELETE",
@@ -122,9 +119,6 @@ export default class MainPage extends Component {
               }),
             })
               .then(res => {
-      
-                console.log("removeCar 2")
-                
       
                 var newDatasourceRemove = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2});
       

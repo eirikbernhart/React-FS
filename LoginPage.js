@@ -3,12 +3,11 @@ import {
     StyleSheet, 
     Text, 
     TextInput,
+    View,
     Button,
-    View
+    StatusBar
 } from 'react-native';
-//import { StackNavigator } from 'react-navigation';
-  
-//const util = require('util');
+
 
 
 
@@ -22,24 +21,27 @@ export default class LoginPage extends Component {
     constructor() {
         super();
 
-        this.login = this.login.bind(this);
     }
 
-    
-
-   
-    login() {
-        
-    }
-      
     
       render() {
       var {navigate} = this.props.navigation;
         
 
         return (
-            <View style={{backgroundColor: 'red'}}>
-                <Text>LoginPage</Text> 
+            <View>
+               
+                <StatusBar hidden />
+
+
+                <TextInput style={{justifyContent: 'center'}}
+                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                    placeholder={"Username..."}
+                />
+                <TextInput style={{justifyContent: 'center'}}
+                    style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                    placeholder={"Password..."}
+                />
                 <Button 
                     title="Log in"
                     value=""
