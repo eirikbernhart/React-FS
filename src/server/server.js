@@ -6,8 +6,10 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 
 const mongoose = require('mongoose');
+const mongoUrl = 'mongodb://eirik:testpass@ds113935.mlab.com:13935/automobiles';
 //mongoose.connect('mongodb://eirik:testpass@ds113935.mlab.com:13935/automobiles');  //Remote db
-mongoose.connect('mongodb://localhost/automobiles'); //Local db
+//mongoose.connect('mongodb://localhost/automobiles'); //ORIGINAL, Local db
+mongoose.connect(mongoUrl, {useMongoClient: true});
 
 const secret = 'topsecret';
 
