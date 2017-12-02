@@ -6,8 +6,8 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 
 const mongoose = require('mongoose');
-//mongoose.connect('mongodb://eirik:testpass@ds113935.mlab.com:13935/automobiles');  //Remote db
-mongoose.connect('mongodb://localhost/automobiles'); //Local db
+mongoose.connect('mongodb://eirik:testpass@ds113935.mlab.com:13935/automobiles');  //Remote db
+//mongoose.connect('mongodb://localhost/automobiles'); //Local db
 
 const secret = 'topsecret';
 
@@ -41,7 +41,7 @@ app.get('/users', (req, res) => {
             res.status(500).send(err);
             return;
         }
-        res.send(users)        
+        res.send(users)         
     })
 });
 //LOG IN USER
@@ -131,8 +131,8 @@ app.post('/automobiles', (req, res) => {
         if(err) {
             res.status(500).send(err);
         }
-        res.send(savedCar); 
-    });
+        res.send(savedCar);
+    }); //CURRENTLY DISABLED FOR DEVELOPMENT PURPOSES
 });
 
 app.delete('/automobiles/:_id', (req, res) => {
@@ -149,9 +149,3 @@ app.delete('/automobiles/:_id', (req, res) => {
 app.listen(1234, () => console.log('LISTENING TO 1234!!!!!!'));
 
 
-/* RANDOM STUFF I MIGHT WANT LATER...
-const UserSpecificAutomobile = mongoose.model(user.username, {
-        name: { type: String, required: true },
-        price: { type: Number, required: true },
-    });
-*/

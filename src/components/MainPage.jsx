@@ -4,13 +4,28 @@ import CarItem from './CarItem';
 import CarForm from './CarForm';
 import FilterComponent from './FilterComponent';
 import { Button } from 'reactstrap';
+import configureStore from '.././store/configureStore';
+import { addCar } from '.././actions/cars';
+import { removeCar } from '.././actions/cars';
+import { clearCar } from '.././actions/cars';
+import { searchCar } from '.././actions/cars';
+import { connect } from 'react-redux';
+import { authenticateUser } from '../actions/auth';
+import { unAuthenticateUser } from '../actions/auth';
+import { pageVisited } from '../actions/auth';
+import selectedCars from '../selectors/cars';
 
 
 
-  
+//import getVisibleCars from '../selectors/cars';
+
+
+
+
 const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
 const jwt = require('jwt-simple');
 const secret = 'topsecret';
+//const store = configureStore();
 
 
 class MainPage extends Component {
@@ -18,35 +33,31 @@ class MainPage extends Component {
     constructor(props) {
         super(props);
 
-        
-
-        this.searchCar = this.searchCar.bind(this);
-        this.addAutomobile = this.addAutomobile.bind(this);
-        this.removeCar = this.removeCar.bind(this);
-        this.getAutomobiles = this.getAutomobiles.bind(this);
-        this.logout = this.logout.bind(this);
+        this.addAutomobileRedux = this.addAutomobileRedux.bind(this); //REDUX
+        this.removeCarRedux = this.removeCarRedux.bind(this); //REDUX
+        this.getAutomobilesRedux = this.getAutomobilesRedux.bind(this); //REDUX
+        this.logoutRedux = this.logoutRedux.bind(this); //REDUX
 
 
-        //console.log("(MainPage)State from props: " + JSON.stringify(props.cars));
+       
 
         this.state = {
             cars: [],
-            backUpCars: []
         };
     }
 
     componentWillMount() {
-        //if(this.localstorage.token)
-        if(this.props.auth) {
-            this.getAutomobiles();
+        if(this.props.auth.authenticated && !this.props.auth.visited) {
+            this.getAutomobilesRedux(); //REDUX
+            this.props.dispatch(pageVisited({visited: true}));
         }
-        //this.getAutomobiles();
     }
 
-    getAutomobiles() {
+    componentWillUnmount() {
+        //localStorage.token = '';
+    }
 
-       
-
+    getAutomobilesRedux() {
         const user = jwt.decode(localStorage.token, secret)
         const url = "http://localhost:1234/automobiles/cars" 
 
@@ -61,82 +72,54 @@ class MainPage extends Component {
           }
         })
         .then(res => {
-        
             var userSpesificData = res.filter(x => x.owner === user.username)
 
-            this.setState({
-            cars: userSpesificData
-          })
-          
+            for(var i = 0; i < userSpesificData.length; i++) {
+                this.props.dispatch(addCar({
+                    carName: userSpesificData[i].name,
+                    id: userSpesificData[i]._id
+                }))
+            }
         })
-        
-      }
+    }
 
-    addAutomobile(automobile) {
-        //urlAutomobiles
-        //`${urlAutomobiles}/users/59ef5b30dddd2b07cca0e470`
-        //const urlUserData = "http://localhost:1234/automobiles/users/" 
+    addAutomobileRedux(automobile) {
+            fetch(urlAutomobiles, {
+                method: "POST",
+                headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+        }),
+        body: JSON.stringify(automobile)
+        })
+        .then(res => {
+            this.props.dispatch(addCar({carName: automobile.name, id: automobile._id}));
+            console.log("Ble staten oppdatert: " + JSON.stringify(this.state.cars));
+        })
+        .catch(err => document.write(err));
+    }
 
-        fetch(urlAutomobiles, {
-            method: "POST",
-            headers: new Headers({
+    removeCarRedux(id) {
+
+        fetch(`${urlAutomobiles}/${id}`, {
+        method: "DELETE",
+        headers: new Headers({
             'Content-Type': 'application/json',
             Accept: 'application/json',
-      }),
-      body: JSON.stringify(automobile)
-    })
-      .then(res => {
-            console.log("HVA ER CAR FRA addCar MainPage: " + JSON.stringify(automobile))
-
-        this.setState({
-            cars: this.state.cars.concat(automobile)
-        });
-        console.log("Ble staten oppdatert: " + JSON.stringify(this.state.cars));
-      })
-      .catch(err => document.write(err));
-  }
-
-  removeCar(id) {
-
-    fetch(`${urlAutomobiles}/${id}`, {
-      method: "DELETE",
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      }),
-    })
-      .then(res => {
-        this.setState(prevState => ({
-          cars: prevState.cars.filter(x => x._id !== id)
-        }));
-      })
-      .catch(err => document.write(err));
-  }
-
-   
-
-    searchCar(name) {   
-    var possibleSearchResult = this.state.cars.filter(x => x.name === name);
-    if (possibleSearchResult.length > 0) {
-      this.setState(x => ({
-        backUpCars: this.state.cars,
-        cars: possibleSearchResult,
-        foundResult: true
-      }));
+        }),
+        })
+        .then(res => {
+            this.props.dispatch(removeCar({id: id}))
+        })
+        .catch(err => document.write(err));
     }
-   
-    if (this.state.foundResult) {
-      this.setState(x => ({
-        cars: this.state.backUpCars
-      }));
-    }
-    this.state.foundResult = false;
-  }
 
-  logout() {
-    this.props.auth(false);
-    this.props.history.push("/");
-  }
+    logoutRedux() {
+        this.props.dispatch(unAuthenticateUser({userName: '', authenticated: false}));
+        this.props.dispatch(clearCar());
+        localStorage.token = '';
+        this.props.history.push("/");
+    }
 
     
 
@@ -145,7 +128,7 @@ class MainPage extends Component {
        
         let component;
 
-        if(this.props.authGlobal === true) {
+        if(this.props.auth.authenticated) { 
             component = (
                 
                     <div className="App">
@@ -163,9 +146,9 @@ class MainPage extends Component {
 
                             <tbody>
                                 <tr>
-                                    <th scope="row"><CarForm addCar={this.addAutomobile} /></th>
+                                    <th scope="row"><CarForm addCar={this.addAutomobileRedux} /></th>
                                     <th scope="row"><FilterComponent
-                                        searchCar={this.searchCar}
+                                        searchCar={this.searchCarRedux}
                                     />
                                     </th>
                                 </tr>
@@ -182,13 +165,12 @@ class MainPage extends Component {
                             </thead>
 
                             <tbody>
-                                {this.state.cars.map((currentCar) => (
-                                    <tr key = {currentCar._id}>
+                                {this.props.cars.map((currentCar) => (
+                                    <tr key = {currentCar.carName}>
                                         <th scope="row">1</th>
                                         <td>
                                         <CarItem
-                             
-                                            removeCar={this.removeCar}
+                                            removeCar={this.removeCarRedux}
                                             car={currentCar} />
                                         </td>
                                     </tr>
@@ -197,7 +179,7 @@ class MainPage extends Component {
                         </Table>
                         <Button 
                         color="danger" 
-                        onClick={this.logout}>Log out
+                        onClick={this.logoutRedux}>Log out
                     </Button>  
                 </div>
             )
@@ -218,5 +200,13 @@ class MainPage extends Component {
 
 }
 
+function mapStateToProps(state) {
+        return {
+            //cars: state.cars, //ORIGINAL
+            cars: selectedCars(state.cars, state.filters),
+            auth: state.auth
+        };
+};
 
-export default MainPage;
+
+export default connect(mapStateToProps)(MainPage);

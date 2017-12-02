@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
+import { authenticateUser } from '../actions/auth';
+import { connect } from 'react-redux';
+
 
 
 const testUser = {
   "username":"testuser",
   "passwordHash":"testpass"
 }
+
+const jwt = require('jwt-simple');
 
 class RegistrationPage extends Component {
 
@@ -17,7 +22,8 @@ class RegistrationPage extends Component {
             password: ''
         }
 
-        this.registerUser = this.registerUser.bind(this);
+        //this.registerUser = this.registerUser.bind(this); //NON-REDUX
+        this.registerUserRedux = this.registerUserRedux.bind(this); //REDUX
         this.handleUsername = this.handleUsername.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
 
@@ -51,6 +57,35 @@ class RegistrationPage extends Component {
             this.props.history.push("/main");
         }
       });
+    }
+
+    registerUserRedux() {
+    
+        const secret = 'topsecret';
+        const urlNewUser = "http://localhost:1234/users"
+
+        const body = {
+                username: this.state.username,
+                password: this.state.password
+        }
+
+        fetch(urlNewUser, {
+            method: "POST",
+            headers: new Headers({
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+            }),
+            body: JSON.stringify(body)
+        })
+        .then(res => res.text())
+        .then(token => {
+            localStorage.token = token
+            const user = jwt.decode(localStorage.token, secret)
+            if(localStorage.token) {
+                this.props.dispatch(authenticateUser({userName: user.username, authenticated: true}));
+                this.props.history.push("/main");
+            }
+        });
     }
 
     handleUsername(e) {
@@ -105,7 +140,9 @@ class RegistrationPage extends Component {
                     </FormGroup>
                     <Button 
                         color="danger"
-                        onClick={this.registerUser}>
+                        //onClick={this.registerUser} //NON-REDUX
+                        onClick={this.registerUserRedux} //REDUX
+                        >
                         Submit   
                     </Button>          
                 </Form>
@@ -117,4 +154,4 @@ class RegistrationPage extends Component {
 }
 
 
-export default RegistrationPage;
+export default connect()(RegistrationPage);

@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import './FilterComponent.css'
+import { setTextFilter } from '../actions/filters';
+import { connect } from 'react-redux';
+
+
 
 class FilterComponent extends Component {
     constructor(props) {
@@ -20,7 +24,12 @@ class FilterComponent extends Component {
         return(
             <div>
                 Søk
-                <input onChange={this.updateSearch}></input>
+                <input 
+                    type="text" 
+                    value={this.props.filters.text} 
+                    onChange={(e) => {
+                        this.props.dispatch(setTextFilter(e.target.value));
+                    }}></input>
             </div>
         )
     }
@@ -28,4 +37,10 @@ class FilterComponent extends Component {
 
 }
 
-export default FilterComponent;
+const mapStateToProps = (state) => {
+    return {
+        filters: state.filters
+    };
+};
+
+export default connect(mapStateToProps)(FilterComponent);

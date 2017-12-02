@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
+import { authenticateUser } from '../actions/auth';
+import { connect } from 'react-redux';
+
+
   
 
 const urlUser = "http://localhost:1234/users";
+const jwt = require('jwt-simple');
+
 
 class LoginPage extends Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
@@ -15,14 +19,15 @@ class LoginPage extends Component {
             password: ''
         }
 
-        
-        this.login = this.login.bind(this);
+        this.loginRedux = this.loginRedux.bind(this); //REDUX
         this.handleUsername = this.handleUsername.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
     }
 
     
-    login() {
+    loginRedux() {
+
+        const secret = 'topsecret';
 
         const urlUserAuth = "http://localhost:1234/usersAuth";
 
@@ -41,8 +46,8 @@ class LoginPage extends Component {
         })
         .then(res => {
             if(res.status === 401) {
-                console.log("NO SUCH USER MODDAFAKKA!")
-                throw 0; //Rather silly way of exiting promise-chain...
+                console.log("NO SUCH USER FROM CLIENT!")
+                throw 0; 
             } else {
                 console.log("USER FOUND, YEY!")
                 return res.text()
@@ -50,15 +55,20 @@ class LoginPage extends Component {
         })
         .then(token => {
             localStorage.token = token
+            const user = jwt.decode(localStorage.token, secret)
 
             console.log("Token from client->login " + token)
 
             if(localStorage.token) {
-                this.props.auth(true);
+                this.props.dispatch(authenticateUser(
+                    {userName: user.username, 
+                        authenticated: true
+                    }));
                 this.props.history.push("/main");
             }
         });
     }
+
 
 
     handleUsername(e) {
@@ -109,7 +119,7 @@ class LoginPage extends Component {
                     </FormGroup>
                     <Button 
                         color="danger" 
-                        onClick={this.login}>Log in
+                        onClick={this.loginRedux}>Log in
                     </Button>  
                 </Form>
             </div>
@@ -123,4 +133,5 @@ class LoginPage extends Component {
 }
 
 
-export default LoginPage;
+
+export default connect()(LoginPage);
