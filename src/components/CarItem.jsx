@@ -10,6 +10,11 @@ class CarItem extends Component {
         this.id = props.car._id;
         this.carName = props.car.name;
         this.handleRemoveCar = this.handleRemoveCar.bind(this);
+        this.handleCheckBox = this.handleCheckBox.bind(this);
+
+        this.state = {
+            checked: false
+        }
 
     }
 
@@ -18,10 +23,29 @@ class CarItem extends Component {
         this.props.removeCar(id);
     }
 
+    handleCheckBox(e) {
+        const target = e.target;
+
+        this.setState({checked: target})
+        if(this.state.checked) {
+            this.setState({checked: false})
+        }
+    }
+
     render(props) {
         return (
             <div className="itemContent">
                 {JSON.stringify(this.props.car.carName)}
+                <div className="checkBox">
+                  
+                <input 
+                     name="isGoing"
+                     type="checkbox"
+                     checked={this.state.checked}
+                     onChange={this.handleCheckBox}/>
+                     Public
+                </div>
+
                 <span className="closebtn"
                     onClick={() => this.handleRemoveCar(this.props.car.id)}>
                     &times;

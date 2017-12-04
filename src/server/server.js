@@ -118,6 +118,18 @@ app.get('/automobiles', (req, res) => {
     
 })
 
+app.get('/automobilesPublic', (req, res) => {
+    Automobile.find((err, automobiles) => {
+        if(err) {
+            res.status(500).send(err);
+            return;
+        }
+        //console.log(automobiles)
+        
+        res.send(automobiles)
+    }) 
+})
+
 //'/automobiles'
 //'/automobiles/users/59ef5b30dddd2b07cca0e470'
 app.post('/automobiles', (req, res) => {

@@ -146,7 +146,8 @@ class RegistrationPage extends Component {
                     <Button 
                         color="danger"
                         onClick={this.registerUserRedux} //REDUX
-                        disabled={!this.state.formIsOk}
+                        //disabled={!this.state.formIsOk}
+                        disabled={false}
                         >
                         Submit   
                     </Button>          

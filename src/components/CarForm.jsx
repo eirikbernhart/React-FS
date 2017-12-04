@@ -9,6 +9,7 @@ class CarForm extends Component {
         super(props);
 
         const user = jwt.decode(localStorage.token, secret)
+        
         console.log("JWT DECODED IN CLIENT, CarForm.JSX: " + JSON.stringify(user.username))
 
         this.state = {
