@@ -14,10 +14,12 @@ import { authenticateUser } from '../actions/auth';
 import { unAuthenticateUser } from '../actions/auth';
 import { pageVisited } from '../actions/auth';
 import selectedCars from '../selectors/cars';
+import { NavLink } from 'react-router-dom';
+import catPic2 from '.././resources/img/401Unauthorized.jpeg';
 
 
 
-//import getVisibleCars from '../selectors/cars';
+
 
 
 
@@ -25,7 +27,6 @@ import selectedCars from '../selectors/cars';
 const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
 const jwt = require('jwt-simple');
 const secret = 'topsecret';
-//const store = configureStore();
 
 
 class MainPage extends Component {
@@ -135,6 +136,7 @@ class MainPage extends Component {
                         <div className="App-header">
                             <h2>Car wishlist</h2>
                         </div>
+                        <h1>Logged in as: {this.props.auth.username}</h1>
 
                         <Table bordered>
                             <thead>
@@ -160,14 +162,14 @@ class MainPage extends Component {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>First Name</th>
+                                    <th>Car</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                {this.props.cars.map((currentCar) => (
-                                    <tr key = {currentCar.carName}>
-                                        <th scope="row">1</th>
+                                {this.props.cars.map((currentCar, index) => (
+                                    <tr key = {currentCar.id}>
+                                        <th scope="row">{index + 1}</th>
                                         <td>
                                         <CarItem
                                             removeCar={this.removeCarRedux}
@@ -185,7 +187,13 @@ class MainPage extends Component {
             )
         } else {
             component = (
-                <h1>Not authorized!</h1>
+                <div className="App-header">
+                    <h2>Not authorized, please 
+                        <NavLink to="/" activeClassName="is-active" className="linkStyle" exact={true}>login</NavLink>
+                    !</h2>
+                    <img src= { catPic2 }/>                
+                    
+                </div> 
             )
         }
 

@@ -61,7 +61,7 @@ class LoginPage extends Component {
 
             if(localStorage.token) {
                 this.props.dispatch(authenticateUser(
-                    {userName: user.username, 
+                    {username: user.username, 
                         authenticated: true
                     }));
                 this.props.history.push("/main");
@@ -90,29 +90,28 @@ class LoginPage extends Component {
      render() {
          return (
             <div>
-                <header>
-                    <p><strong>LOGIN</strong></p>
-                    <br></br>
-                </header>
+                <div className="App-header">
+                    <h2>Login</h2>
+                </div>    
                 <Form>
                     <FormGroup>
-                        <Label for="userName">Username</Label>
+                        <Label for="userName"><strong>Username</strong></Label>
                         <Input 
                             type="username" 
                             name="username" 
                             id="userName" 
-                            placeholder="username..."
+                            placeholder="Username..."
                             value={this.state.username}
                             onChange={this.handleUsername}  
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="examplePassword">Password</Label>
+                        <Label for="examplePassword"><strong>Password</strong></Label>
                         <Input 
                             type="password" 
                             name="password" 
                             id="examplePassword" 
-                            placeholder="password..."
+                            placeholder="Password..."
                             value={this.state.password}  
                             onChange={this.handlePassword} 
                         />

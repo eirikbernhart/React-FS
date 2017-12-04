@@ -4,13 +4,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { authenticateUser } from '../actions/auth';
 import { connect } from 'react-redux';
 
-
-
-const testUser = {
-  "username":"testuser",
-  "passwordHash":"testpass"
-}
-
 const jwt = require('jwt-simple');
 
 class RegistrationPage extends Component {
@@ -19,10 +12,10 @@ class RegistrationPage extends Component {
         super(props);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            formIsOk: false
         }
 
-        //this.registerUser = this.registerUser.bind(this); //NON-REDUX
         this.registerUserRedux = this.registerUserRedux.bind(this); //REDUX
         this.handleUsername = this.handleUsername.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
@@ -32,32 +25,31 @@ class RegistrationPage extends Component {
 
 
     registerUser() {
+        const urlNewUser = "http://localhost:1234/users"
 
-    const urlNewUser = "http://localhost:1234/users"
-
-    const body = {
-            username: this.state.username,
-            password: this.state.password
-    }
-
-      fetch(urlNewUser, {
-        method: "POST",
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        }),
-        body: JSON.stringify(body)
-      })
-      .then(res => res.text())
-      .then(token => {
-        localStorage.token = token
-        console.log("Token from client: " + token);
-        if(localStorage.token) {
-            this.props.auth(true);
-            this.props.history.push("/main");
+        const body = {
+                username: this.state.username,
+                password: this.state.password
         }
-      });
-    }
+
+        fetch(urlNewUser, {
+            method: "POST",
+            headers: new Headers({
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+            }),
+            body: JSON.stringify(body)
+        })
+        .then(res => res.text())
+        .then(token => {
+            localStorage.token = token
+            console.log("Token from client: " + token);
+            if(localStorage.token) {
+                this.props.auth(true);
+                this.props.history.push("/main");
+            }
+        });
+        }
 
     registerUserRedux() {
     
@@ -100,26 +92,35 @@ class RegistrationPage extends Component {
         })
     }
 
+    
+
 
      render() {
+
+
+        var passCheck;
+        if(this.state.password.length < 4) {
+            passCheck = ( 
+                <p>Password must be atleast 4 characters long!</p>
+            );
+        } else {
+            passCheck = (
+                null
+            )
+        }
+
+
+
          return (
             <div>
-                <header>
-                <p><strong>SIGN UP</strong></p>
-                <br></br>
-                </header>
+                <div className="App-header">
+                    <h2>Sign Up!</h2>
+                </div>   
                 <Form>
                     <FormGroup>
-                        <Label for="exampleEmail">Email</Label>
-                        <Input 
-                            type="email" 
-                            name="email" 
-                            id="exampleEmail" 
-                            placeholder="example@mail.com"                          
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="userName">Username</Label>
+                        <Label for="userName">
+                            <strong>Username</strong>
+                        </Label>
                         <Input 
                             type="username" 
                             name="username" 
@@ -127,21 +128,25 @@ class RegistrationPage extends Component {
                             placeholder="Username..." 
                             onChange={this.handleUsername} 
                         />
-                </FormGroup>
+                    </FormGroup>
+                    
                     <FormGroup>
-                        <Label for="examplePassword">Password</Label>
+                        <Label for="examplePassword">
+                            <strong>Password</strong>
+                            {passCheck}
+                        </Label>
                         <Input 
                             type="password" 
                             name="password" 
                             id="examplePassword" 
-                            placeholder="password..." 
+                            placeholder="Password..." 
                             onChange={this.handlePassword} 
                         />
                     </FormGroup>
                     <Button 
                         color="danger"
-                        //onClick={this.registerUser} //NON-REDUX
                         onClick={this.registerUserRedux} //REDUX
+                        disabled={!this.state.formIsOk}
                         >
                         Submit   
                     </Button>          
@@ -149,9 +154,13 @@ class RegistrationPage extends Component {
             </div>
          )
     }
-
-
 }
 
+function mapStateToProps(state) {
+    return {
+        auth: state.auth
+    };
+};
 
-export default connect()(RegistrationPage);
+
+export default connect(mapStateToProps)(RegistrationPage);

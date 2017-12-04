@@ -10,6 +10,7 @@ export default (state = userReducerDefaultState, action) => {
             case 'AUTHENTICATE_USER':
                 return {
                     ...state,
+                    username: action.username,
                     authenticated: true,
                     visited: false
                 }   

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import catPic from '.././resources/img/404NotFound.jpeg';
+import catPic1 from '.././resources/img/404NotFound.jpeg';
+import heartStone from '.././resources/img/heartstone.jpeg';
+import { NavLink } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 
   
@@ -12,8 +14,14 @@ class NotFoundPage extends Component {
      render() {
          return (
             <div>
-                <Link to="/">Redirect back</Link>
-                <img src= { catPic }/>                
+                <div className="App-header">
+                    <h2>Page not found!</h2>
+                    <NavLink to="/" activeClassName="is-active" className="linkStyle" exact={true}>
+                        <button><img src={heartStone}/></button>
+                    </NavLink>
+                    
+                </div>
+                <img src= { catPic1 }/>                
             </div>
          )
     }
