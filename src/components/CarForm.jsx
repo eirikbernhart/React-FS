@@ -17,7 +17,8 @@ class CarForm extends Component {
             name: '',
             price: 1234,
             __v: 0,
-            owner: user.username
+            owner: user.username,
+            isPublic: false
         };
         this.handleUserInput = this.handleUserInput.bind(this);
         this.writeNewCar = this.writeNewCar.bind(this);

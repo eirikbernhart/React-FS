@@ -80,8 +80,8 @@ class InspirationPage extends Component {
                         <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Owner Recommendations ---></th>                                    
                                     <th>Car</th>
-                                    <th>Owner</th>
                                 </tr>
                         </thead>
     
@@ -90,10 +90,10 @@ class InspirationPage extends Component {
                             <tr key = {data._id}>
                                 <th scope="row">{index + 1}</th>
                                      <td>
-                                        {data.name}
+                                        {data.owner}
                                     </td>
                                     <td>
-                                        {data.owner}
+                                        {data.name}                                    
                                     </td>
                             </tr>
                         ))}        

@@ -78,7 +78,8 @@ class MainPage extends Component {
             for(var i = 0; i < userSpesificData.length; i++) {
                 this.props.dispatch(addCar({
                     carName: userSpesificData[i].name,
-                    id: userSpesificData[i]._id
+                    id: userSpesificData[i]._id,
+                    isPublic: userSpesificData[i].isPublic
                 }))
             }
         })
@@ -94,7 +95,11 @@ class MainPage extends Component {
         body: JSON.stringify(automobile)
         })
         .then(res => {
-            this.props.dispatch(addCar({carName: automobile.name, id: automobile._id}));
+            this.props.dispatch(addCar({
+                carName: automobile.name, 
+                id: automobile._id, 
+                isPublic: automobile.isPublic
+            }));
             console.log("Ble staten oppdatert: " + JSON.stringify(this.state.cars));
         })
         .catch(err => document.write(err));
@@ -114,6 +119,21 @@ class MainPage extends Component {
         })
         .catch(err => document.write(err));
     }
+
+    makePublicOrPrivate(id){
+        fetch(`${urlAutomobiles}/${id}`, {
+            method: "PUT",
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            }),
+            })
+            .then(res => {
+                
+            })
+            .catch(err => document.write(err));
+    }
+
 
     logoutRedux() {
         this.props.dispatch(unAuthenticateUser({userName: '', authenticated: false}));
@@ -150,7 +170,6 @@ class MainPage extends Component {
                                 <tr>
                                     <th scope="row"><CarForm addCar={this.addAutomobileRedux} /></th>
                                     <th scope="row"><FilterComponent
-                                        searchCar={this.searchCarRedux}
                                     />
                                     </th>
                                 </tr>
@@ -173,6 +192,7 @@ class MainPage extends Component {
                                         <td>
                                         <CarItem
                                             removeCar={this.removeCarRedux}
+                                            makePublicOrPrivate={this.makePublicOrPrivate}
                                             car={currentCar} />
                                         </td>
                                     </tr>

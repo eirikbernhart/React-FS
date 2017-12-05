@@ -3,12 +3,13 @@
 
 //Action: Add car
 export const addCar = 
-({carName = '', id = '', price = 0} = {}) => ({
+({carName = '', id = '', price = 0, isPublic = false} = {}) => ({
     type: 'ADD_CAR',
     car: {
         carName,
         price,
-        id
+        id,
+        isPublic
     }
 });
 
@@ -18,13 +19,21 @@ export const removeCar = ({ id } = {}) => ({
     id
 });
 
-//Action: Search car
-export const searchCar = ( name ) =>({
-    type: 'SEARCH_CAR',
-    name
-});
 
 //Action: Clear cars
 export const clearCar = () =>({
     type: 'CLEAR_CAR'
+    
+});
+
+//Action: Make public
+export const makePublic = ({ index } = {}) => ({
+    type: 'MAKE_PUBLIC',
+    index,    
+});
+
+export const makePrivate = ({ index }) => ({
+    type: 'MAKE_PRIVATE',
+    index,
+
 });

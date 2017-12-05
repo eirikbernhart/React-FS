@@ -21,7 +21,8 @@ const User = mongoose.model('users', {
 const Automobile = mongoose.model('cars', {
     name: { type: String, required: true },
     price: { type: Number, required: true },
-    owner: { type: String, required: true }
+    owner: { type: String, required: true },
+    isPublic: { type: Boolean, required: true}
 });
 
 
@@ -95,8 +96,6 @@ app.post('/users', (req, res) => {
 })
 
 //GET BASED ON VALID TOKEN
-//'/automobiles'
-//'/automobiles/users/59ef5b30dddd2b07cca0e470'
 app.get('/automobiles', (req, res) => {
     const token = req.header('X-Token');
 
@@ -124,14 +123,16 @@ app.get('/automobilesPublic', (req, res) => {
             res.status(500).send(err);
             return;
         }
-        //console.log(automobiles)
+
+        var publicAutomobiles = automobiles.filter(x => x.isPublic === true);
+
+        console.log("All public cars: " + publicAutomobiles);
         
-        res.send(automobiles)
+        res.send(publicAutomobiles)
     }) 
 })
 
-//'/automobiles'
-//'/automobiles/users/59ef5b30dddd2b07cca0e470'
+
 app.post('/automobiles', (req, res) => {
 
     const body = req.body;
@@ -144,7 +145,30 @@ app.post('/automobiles', (req, res) => {
             res.status(500).send(err);
         }
         res.send(savedCar);
-    }); //CURRENTLY DISABLED FOR DEVELOPMENT PURPOSES
+    }); 
+});
+
+app.put('/automobiles/:_id', (req, res) => {
+    const id = req.params._id;
+    Automobile.findById(id, (err, automobile) => {
+        if(err) {
+            res.status(500).send(err);
+        } else {
+            console.log("SERVER: IS IT PUBLIC: " + automobile.isPublic);
+            if(!automobile.isPublic) {                      
+                automobile.isPublic = true;    
+            } else if (automobile.isPublic) {
+                automobile.isPublic = false;
+            }
+        
+        automobile.save((err, automobile) => {
+            if(err) {
+                res.status(500).send(err);
+            }
+            res.status(200).send(automobile);
+        });
+        }
+    });
 });
 
 app.delete('/automobiles/:_id', (req, res) => {

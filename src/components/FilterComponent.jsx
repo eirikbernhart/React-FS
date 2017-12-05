@@ -11,14 +11,7 @@ class FilterComponent extends Component {
         this.state = {
             search: ''
         };
-        this.updateSearch = this.updateSearch.bind(this);
     }
-
-    updateSearch(e) {
-        this.props.searchCar(e.target.value)
-    }
-
-   
 
     render() {
         return(

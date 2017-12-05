@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import './CarItem.css';
 import { connect } from 'react-redux';
+import { makePublic } from '.././actions/cars';
+import { makePrivate } from '.././actions/cars';
+
+
 
 
 class CarItem extends Component {
@@ -11,11 +15,24 @@ class CarItem extends Component {
         this.carName = props.car.name;
         this.handleRemoveCar = this.handleRemoveCar.bind(this);
         this.handleCheckBox = this.handleCheckBox.bind(this);
+        this.findIndex = this.findIndex.bind(this);
 
-        this.state = {
-            checked: false
-        }
+       
 
+        
+
+    }
+
+    componentWillMount() {
+        //console.log("Comp mount ran?");
+        //console.log("IS IT CHECKED AT START: " + JSON.stringify(this.props.car.isPublic));
+        //console.log("WHAT ARE PROPS.CARS: " + JSON.stringify(this.props.cars));
+        //props.car retrieves car different car obj twice, props.cars retrives an arr of car obj. FUNKY AF! HUH!
+        
+            this.setState({
+                checked: this.props.car.isPublic
+            })
+        
     }
 
     handleRemoveCar(id) {
@@ -25,11 +42,28 @@ class CarItem extends Component {
 
     handleCheckBox(e) {
         const target = e.target;
+        let carID = this.props.car.id;
 
-        this.setState({checked: target})
-        if(this.state.checked) {
-            this.setState({checked: false})
+        if(!this.props.car.isPublic) {
+            let index = this.findIndex(carID);
+            this.props.dispatch(makePublic({index: index}));
+            this.props.makePublicOrPrivate(carID);
         }
+        if(this.props.car.isPublic) {
+            let index = this.findIndex(carID);
+            this.props.dispatch(makePrivate({index: index}));
+            this.props.makePublicOrPrivate(carID);
+        }
+    }
+
+    findIndex(carID){
+        var indexVal;
+        this.props.cars.map((currentItem, index) => {
+            if(currentItem.id === carID) {            
+                indexVal = index;                       
+            } 
+        }); 
+        return indexVal;
     }
 
     render(props) {
@@ -41,7 +75,7 @@ class CarItem extends Component {
                 <input 
                      name="isGoing"
                      type="checkbox"
-                     checked={this.state.checked}
+                     checked={this.props.car.isPublic}
                      onChange={this.handleCheckBox}/>
                      Public
                 </div>

@@ -60,10 +60,10 @@ class LoginPage extends Component {
             console.log("Token from client->login " + token)
 
             if(localStorage.token) {
-                this.props.dispatch(authenticateUser(
-                    {username: user.username, 
-                        authenticated: true
-                    }));
+                this.props.dispatch(authenticateUser({
+                    username: user.username, 
+                    authenticated: true
+                }));
                 this.props.history.push("/main");
             }
         });
