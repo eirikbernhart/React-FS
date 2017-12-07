@@ -16,6 +16,8 @@ class CarItem extends Component {
         this.handleRemoveCar = this.handleRemoveCar.bind(this);
         this.handleCheckBox = this.handleCheckBox.bind(this);
         this.findIndex = this.findIndex.bind(this);
+        this.socketEvent = this.socketEvent.bind(this);
+        
 
        
 
@@ -40,20 +42,35 @@ class CarItem extends Component {
         this.props.removeCar(id);
     }
 
+    //AFTER HOURS OF HOURS... PLZ DON'T ASK WHY this.socketEvent() is called in this mysterious manner...
     handleCheckBox(e) {
         const target = e.target;
         let carID = this.props.car.id;
+
+        this.socketEvent();
+        
 
         if(!this.props.car.isPublic) {
             let index = this.findIndex(carID);
             this.props.dispatch(makePublic({index: index}));
             this.props.makePublicOrPrivate(carID);
+            this.socketEvent();
+            
+            
+            
+            
         }
         if(this.props.car.isPublic) {
             let index = this.findIndex(carID);
             this.props.dispatch(makePrivate({index: index}));
             this.props.makePublicOrPrivate(carID);
+            this.socketEvent();
+           
+            
         }
+        
+        
+
     }
 
     findIndex(carID){
@@ -64,6 +81,11 @@ class CarItem extends Component {
             } 
         }); 
         return indexVal;
+    }
+
+    socketEvent() {
+        console.log("SocketEvent called")
+        this.props.activeSocket.inSocket.emit('testEvent');
     }
 
     render(props) {
@@ -91,7 +113,8 @@ class CarItem extends Component {
 
 function mapStateToProps(state) {
         return {
-            cars: state.cars
+            cars: state.cars,
+            activeSocket: state.activeSocket
         };
 };
 

@@ -3,44 +3,59 @@ import { Table, Button } from 'reactstrap';
 import CarForm from './CarForm';
 import CarItem from './CarItem';
 import FilterComponent from './FilterComponent';
+import { connect } from 'react-redux';
 
 
-const urlAutomobilesPublic = "http://localhost:1234/automobilesPublic"
+
+const urlAutomobilesPublic = "http://localhost:1234/automobilesPublic";
 
 class InspirationPage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            inspirations: []
+            inspirations: [],
+            socketTestData: 'default', //SOCKET: Socket.IO-related
         };
 
-        this.initState = this.initState.bind(this);     
-        this.getAutomobilesPublic = this.getAutomobilesPublic.bind(this);   
+        this.getAutomobilesPublic = this.getAutomobilesPublic.bind(this); 
+        //this.init = this.init.bind(this);  
+
+        //this.init();
+
+        
+        
     }
 
-    componentDidMount() {    
-      //this.initState();  
-      this.getAutomobilesPublic();
+    componentDidMount() {   
+        
+        
+      this.getAutomobilesPublic()
+      this.props.activeSocket.inSocket.on('testEvent', () => 
+        this.getAutomobilesPublic(),
+      );
+     
+      console.log("Null?: " + this.props.activeSocket);
+
+      
+
+     
+      
+    
+      
+        
+    
+      
     };
+    
 
-    initState() {
-        const dummyData = [{
-            name: 'Audi R8',
-            id: 0,
-            owner: 'Derek'
-        },
-        {
-            name: 'Tesla Roadster 2020',
-            id: 2,
-            owner: 'Zlad'
-        }]
+    
 
-        this.setState({inspirations: dummyData}, () => {
-            console.log('STATE ' + JSON.stringify(this.state.inspirations));
-            
-        })
-    }
+    
+
+    
+
+   
 
     getAutomobilesPublic() {
         fetch(urlAutomobilesPublic, {
@@ -53,11 +68,16 @@ class InspirationPage extends Component {
         })
         .then(res2 => {
             //var publicData = res.filter(x => x.public === true)
+            console.log("CARS in inspiration: " + res2);
             this.setState({
                 inspirations: res2
             });
+
+            
+            return res2;    
         })
     }
+
     
     render() {
         
@@ -68,6 +88,8 @@ class InspirationPage extends Component {
                 <div>
                 <div className="App-header">
                     <h2>Inspiration page</h2>
+                    <p>SocketTestData: {this.state.socketTestData}</p>
+
                 </div>
                 <div>
                     <Table bordered>
@@ -110,8 +132,14 @@ class InspirationPage extends Component {
            
     }
 
+    function mapStateToProps(state) {
+        return {
+            activeSocket: state.activeSocket
+        };
+};
 
-export default InspirationPage;
+
+export default connect(mapStateToProps)(InspirationPage);
 /**
  * 
  * tbody>

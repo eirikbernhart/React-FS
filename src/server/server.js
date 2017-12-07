@@ -1,5 +1,12 @@
-
+//const ws = require('ws'); Websocket-related
 const express = require('express');
+
+//*********Socket.IO-related*****/
+const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+//*******************************/
+
 const jwt = require('jwt-simple');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -27,7 +34,6 @@ const Automobile = mongoose.model('cars', {
 
 
 
-const app = express();
 app.use('/', bodyParser.json());
 app.use('/', cors());
 
@@ -182,6 +188,122 @@ app.delete('/automobiles/:_id', (req, res) => {
     })
 })
 
-app.listen(1234, () => console.log('LISTENING TO 1234!!!!!!'));
+function pushToServer() {
+    console.log("SERVER: Item was pushed");
+}
+
+function pushToInspirationsListPull() {
+    console.log("SERVER: Item was pulled");
+}
 
 
+//SOCKET.IO TRY 2
+
+io.on('connection', function(socket){
+    console.log(`Socket ID: ${socket.id}`); //ID per user connected ?!QUE!?!
+    socket.on('testEvent', () => io.emit('testEvent'));
+});
+
+server.listen(1234);
+
+
+
+//httpServer = app.listen(1234, () => console.log('LISTENING TO 1234!!!!!!')); //DON'T DELETE!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SOCKET RELATED
+
+
+//WEBSOCKETS
+/** 
+let sockets = [];
+
+
+const wsServer = new ws.Server({
+    server: httpServer,
+});
+
+wsServer.on('connection', (socket) => {
+    sockets.push(socket)
+    socket.send('Hello!, from server');
+
+    socket.on('close', () => {
+        console.log('Disconnected, from server :(');
+        sockets = sockets.filter(savedSocket => savedSocket !== socket);
+    });
+
+    socket.on('message', text => {
+        sockets.forEach(socket => socket.send(text));
+    });
+});
+**/
+
+
+//SOCKET.IO TRY 1
+/*const io = require('socket.io')();
+
+io.on('connection', (client) => {
+  // here you can start emitting events to the client
+  
+  
+    client.on('subscribeToTimer', (interval) => {
+        console.log('Client is subscribing to timer with interval ', interval);
+        setInterval(() => {
+            client.emit('timer', new Date());
+        }, interval);
+    });
+
+    client.on('pushToServer', (pushedItem) => {
+        pushToServer();
+        client.emit('pushedItem', pushToInspirationsListPush())
+        
+    });
+
+    client.on('subscribeToInspirationListPull', (pushedItem) => {
+        pushToInspirationsListPull();
+        client.emit('pushedItem', pushToInspirationsListPull())
+        
+    });
+
+
+
+});*/

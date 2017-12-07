@@ -16,17 +16,29 @@ import { pageVisited } from '../actions/auth';
 import selectedCars from '../selectors/cars';
 import { NavLink } from 'react-router-dom';
 import catPic2 from '.././resources/img/401Unauthorized.jpeg';
+import { subscribeToTimer } from '../socket';
+import { pushToServer } from '../socket';
+import io from 'socket.io-client';
+import { setSocket } from '.././actions/socket';
 
 
 
 
 
 
+
+
+
+
+//const url = 'ws://localhost:1234';//Web-Socket related
+const socketUrl = 'http://localhost:1234';
+const socket = null;
 
 
 const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
 const jwt = require('jwt-simple');
 const secret = 'topsecret';
+
 
 
 class MainPage extends Component {
@@ -38,20 +50,48 @@ class MainPage extends Component {
         this.removeCarRedux = this.removeCarRedux.bind(this); //REDUX
         this.getAutomobilesRedux = this.getAutomobilesRedux.bind(this); //REDUX
         this.logoutRedux = this.logoutRedux.bind(this); //REDUX
-
-
-       
+        //this.socketEvent = this.socketEvent.bind(this);
+        //this.initSocket = this.initSocket.bind(this);
 
         this.state = {
             cars: [],
+            socket: null,
+            //webSocket: [], //SOCKET: WebSocket-related
+            timestamp: 'no timestamp yet',
+            testObject: 'empty', //SOCKET: Socket.IO-related
+            socketTestData: '', //SOCKET: Socket.IO-related
         };
+
+        
     }
 
+    //initSocket = () => { //ORIGINAL
+    /*initSocket() {
+        this.socket = io(socketUrl);
+        this.socket.on('connect', () => {
+            console.log(`User: ${this.props.auth.username} has connected, from MainPage`);
+            this.props.dispatch(setSocket({inSocket: this.socket}));
+
+            this.props.activeSocket.inSocket.on('testEvent', () => this.setState({socketTestData: 'TestData'})); //ORIGINAL            
+        });
+    }*/
+
     componentWillMount() {
+
         if(this.props.auth.authenticated && !this.props.auth.visited) {
+
+            //WEBSOCKET: Socket.IO related TRY 
+            //this.initSocket();
+
             this.getAutomobilesRedux(); //REDUX
             this.props.dispatch(pageVisited({visited: true}));
+
+            
         }
+    }
+
+    componentDidMount() {
+        
     }
 
     componentWillUnmount() {
@@ -121,6 +161,9 @@ class MainPage extends Component {
     }
 
     makePublicOrPrivate(id){
+
+        //this.socketEvent();// DOESNT WORK FOR SOME REASON...
+
         fetch(`${urlAutomobiles}/${id}`, {
             method: "PUT",
             headers: new Headers({
@@ -132,6 +175,7 @@ class MainPage extends Component {
                 
             })
             .catch(err => document.write(err));
+            
     }
 
 
@@ -141,6 +185,10 @@ class MainPage extends Component {
         localStorage.token = '';
         this.props.history.push("/");
     }
+
+    /*socketEvent() {
+        this.props.activeSocket.inSocket.emit('testEvent');
+    }*/
 
     
 
@@ -200,9 +248,14 @@ class MainPage extends Component {
                             </tbody>
                         </Table>
                         <Button 
-                        color="danger" 
-                        onClick={this.logoutRedux}>Log out
-                    </Button>  
+                            color="danger" 
+                            onClick={this.logoutRedux}>Log out
+                        </Button>  
+                        <Button 
+                            color="danger" 
+                            onClick={this.socketEvent}>SocketEvent
+                        </Button>  
+                        
                 </div>
             )
         } else {
@@ -230,11 +283,55 @@ class MainPage extends Component {
 
 function mapStateToProps(state) {
         return {
-            //cars: state.cars, //ORIGINAL
             cars: selectedCars(state.cars, state.filters),
-            auth: state.auth
+            auth: state.auth,
+            activeSocket: state.activeSocket
         };
 };
 
 
 export default connect(mapStateToProps)(MainPage);
+
+
+
+
+
+
+
+
+//WEBSOCKET: Socket.IO related TRY 1
+        /*subscribeToTimer((err, timestamp) => this.setState({ 
+            timestamp: timestamp
+        }));*/
+
+        /*pushToServer((err, data) => this.setState({
+            testObject: data,
+        }));
+        console.log("DATA FROM SOCKET IN MAIN: " + this.state.testObject);
+       */ 
+        
+
+         //WEBSOCKET: WebSocket related
+            /*const ws = new WebSocket(url);
+            this.setState({webSocket: ws});
+
+            ws.onopen = () => {
+                console.log('Connected from client!');
+            };
+
+            ws.onmessage = message => {
+                const text = message.data;
+                this.setState({
+                    messages: [...this.state.messages, text],
+                });
+            };*/ 
+
+
+            /**
+             * 
+             * 
+             * <Button 
+                            color="danger" 
+                            onClick={this.socketEvent}>SocketEvent
+                        </Button>  
+             */
