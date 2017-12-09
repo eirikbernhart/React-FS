@@ -41,7 +41,7 @@ const secret = 'topsecret';
 
 
 
-class MainPage extends Component {
+export class MainPage extends Component {
 
     constructor(props) {
         super(props);

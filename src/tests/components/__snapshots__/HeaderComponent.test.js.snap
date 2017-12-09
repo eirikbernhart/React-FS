@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render header correctly 1`] = `
+<div>
+  <header
+    style={
+      Object {
+        "backgroundColor": "#eeeedf",
+      }
+    }
+  >
+    <NavLink
+      activeClassName="is-active"
+      ariaCurrent="true"
+      className="linkStyle"
+      exact={true}
+      to="/"
+    >
+      Login
+    </NavLink>
+    <NavLink
+      activeClassName="is-active"
+      ariaCurrent="true"
+      className="linkStyle"
+      exact={true}
+      to="/register"
+    >
+      Sign Up!
+    </NavLink>
+    <NavLink
+      activeClassName="is-active"
+      ariaCurrent="true"
+      className="linkStyle"
+      exact={true}
+      to="/main"
+    >
+      Main page
+    </NavLink>
+    <NavLink
+      activeClassName="is-active"
+      ariaCurrent="true"
+      className="linkStyle"
+      exact={true}
+      to="/inspiration"
+    >
+      Inspiration page
+    </NavLink>
+  </header>
+</div>
+`;

@@ -1,0 +1,4 @@
+{
+    "test": "react-scripts test --env=jsdom", //ORIGINAL
+    "test": "jest --config=jest.config.json", //TRY ENZYME
+}

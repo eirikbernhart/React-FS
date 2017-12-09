@@ -1,7 +1,5 @@
 
 
-
-
 // Get visible cars
 export default (cars, { text }) => {
     return cars.filter((car) => {
