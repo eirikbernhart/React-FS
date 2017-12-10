@@ -73,7 +73,7 @@ export class MainPage extends Component {
 
     getAutomobilesRedux() {
         const user = jwt.decode(localStorage.token, secret)
-        const url = "http://localhost:1234/automobiles/cars" 
+        
 
         fetch(urlAutomobiles, {
           headers: {
@@ -86,7 +86,7 @@ export class MainPage extends Component {
           }
         })
         .then(res => {
-            var userSpesificData = res.filter(x => x.owner === user.username)
+            var userSpesificData = res;
 
             for(var i = 0; i < userSpesificData.length; i++) {
                 this.props.dispatch(addCar({
@@ -99,11 +99,13 @@ export class MainPage extends Component {
     }
 
     addAutomobileRedux(automobile) {
+        console.log("TOKEN POSTCAR:" + localStorage.token)
             fetch(urlAutomobiles, {
                 method: "POST",
                 headers: new Headers({
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
+                'X-Token': localStorage.token,
         }),
         body: JSON.stringify(automobile)
         })
@@ -129,6 +131,7 @@ export class MainPage extends Component {
         headers: new Headers({
             'Content-Type': 'application/json',
             Accept: 'application/json',
+            'X-Token': localStorage.token,
         }),
         })
         .then(res => {

@@ -1,4 +1,3 @@
-//const ws = require('ws'); Websocket-related
 const express = require('express');
 
 //*********Socket.IO-related*****/
@@ -117,9 +116,10 @@ app.get('/automobiles', (req, res) => {
                 res.status(500).send(err);
                 return;
             }
-            //console.log(automobiles)
-            
-            res.send(automobiles)
+            var privateAutomobiles = automobiles.filter(x => x.owner === user.username);
+            console.log("Private autos: " + privateAutomobiles);
+
+            res.send(privateAutomobiles);
         }) 
     
 })
@@ -141,13 +141,16 @@ app.get('/automobilesPublic', (req, res) => {
 
 
 app.post('/automobiles', (req, res) => {
-
     const body = req.body;
+    const token = req.header('X-Token');
+    if(!token) {
+        return res.status(401).send('No token supplied via header X-Token');
+    }
+    const user = jwt.decode(token, secret);
+    if(body.owner === user.username) {
+        let car = new Automobile(body);
 
-
-    let car = new Automobile(body);
-
-     car.save((err, savedCar) => {
+        car.save((err, savedCar) => {
        
 
         if(err) {
@@ -157,6 +160,7 @@ app.post('/automobiles', (req, res) => {
         console.log("Posted car on server: " + savedCar._id);
         res.send(savedCar);
     }); 
+    }
 });
 
 app.put('/automobiles/:_id', (req, res) => {
@@ -183,14 +187,32 @@ app.put('/automobiles/:_id', (req, res) => {
 });
 
 app.delete('/automobiles/:_id', (req, res) => {
-    const id = req.params._id;
-    Automobile.remove({ '_id' : id}, (err)=> {
-        if(err) {
-           console.log("ERROR i delete:" +  err);
-        }
 
-        res.send();
-    })
+    const token = req.header('X-Token');
+    if(!token) {
+        return res.status(401).send('No token supplied via header X-Token');
+    }
+    const user = jwt.decode(token, secret);
+    const id = req.params._id;
+    console.log("HVAÆR ID: " + id);
+
+    Automobile.findById(id, (err, data) => {
+        if(err) {
+            console.log("Permission denied!")
+        } else {
+            console.log("Found car: " + JSON.stringify(data));
+            console.log("Found cars owner: " + data.owner);
+            if(data.owner === user.username) {
+                Automobile.remove({ '_id' : id}, (err)=> {
+                if(err) {
+                    console.log("Car not found!:" +  err);
+                }
+
+                res.send();
+             })
+            }
+        }
+    });
 })
 
 function pushToServer() {
@@ -202,113 +224,10 @@ function pushToInspirationsListPull() {
 }
 
 
-//SOCKET.IO TRY 2
-
 io.on('connection', function(socket){
-    console.log(`Socket ID: ${socket.id}`); //ID per user connected ?!QUE!?!
+    console.log(`Socket ID: ${socket.id}`); 
     socket.on('testEvent', () => io.emit('testEvent'));
 });
 
 server.listen(1234);
 
-
-
-//httpServer = app.listen(1234, () => console.log('LISTENING TO 1234!!!!!!')); //DON'T DELETE!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//SOCKET RELATED
-
-
-//WEBSOCKETS
-/** 
-let sockets = [];
-
-
-const wsServer = new ws.Server({
-    server: httpServer,
-});
-
-wsServer.on('connection', (socket) => {
-    sockets.push(socket)
-    socket.send('Hello!, from server');
-
-    socket.on('close', () => {
-        console.log('Disconnected, from server :(');
-        sockets = sockets.filter(savedSocket => savedSocket !== socket);
-    });
-
-    socket.on('message', text => {
-        sockets.forEach(socket => socket.send(text));
-    });
-});
-**/
-
-
-//SOCKET.IO TRY 1
-/*const io = require('socket.io')();
-
-io.on('connection', (client) => {
-  // here you can start emitting events to the client
-  
-  
-    client.on('subscribeToTimer', (interval) => {
-        console.log('Client is subscribing to timer with interval ', interval);
-        setInterval(() => {
-            client.emit('timer', new Date());
-        }, interval);
-    });
-
-    client.on('pushToServer', (pushedItem) => {
-        pushToServer();
-        client.emit('pushedItem', pushToInspirationsListPush())
-        
-    });
-
-    client.on('subscribeToInspirationListPull', (pushedItem) => {
-        pushToInspirationsListPull();
-        client.emit('pushedItem', pushToInspirationsListPull())
-        
-    });
-
-
-
-});*/
