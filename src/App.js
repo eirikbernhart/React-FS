@@ -14,7 +14,7 @@ import io from 'socket.io-client';
 import { setSocket } from './actions/socket';
 
 
-const socketUrl = 'http://localhost:1234';
+const socketUrl = 'http://localhost:1234'; //ORIGINAL
 const socket = null;
 const urlRemote = "https://api.mlab.com/api/1/databases/automobiles/collections/authenticatedUsers?apiKey=9fY51lB2S10nmmu-pZ-sF5xUJ_eYhPcL";
 const store = configureStore();

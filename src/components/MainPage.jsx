@@ -182,7 +182,7 @@ export class MainPage extends Component {
     logoutRedux() {
         this.props.dispatch(unAuthenticateUser({userName: '', authenticated: false}));
         this.props.dispatch(clearCar());
-        localStorage.token = '';
+        //localStorage.token = '';
         this.props.history.push("/");
     }
 
@@ -293,45 +293,3 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps)(MainPage);
 
 
-
-
-
-
-
-
-//WEBSOCKET: Socket.IO related TRY 1
-        /*subscribeToTimer((err, timestamp) => this.setState({ 
-            timestamp: timestamp
-        }));*/
-
-        /*pushToServer((err, data) => this.setState({
-            testObject: data,
-        }));
-        console.log("DATA FROM SOCKET IN MAIN: " + this.state.testObject);
-       */ 
-        
-
-         //WEBSOCKET: WebSocket related
-            /*const ws = new WebSocket(url);
-            this.setState({webSocket: ws});
-
-            ws.onopen = () => {
-                console.log('Connected from client!');
-            };
-
-            ws.onmessage = message => {
-                const text = message.data;
-                this.setState({
-                    messages: [...this.state.messages, text],
-                });
-            };*/ 
-
-
-            /**
-             * 
-             * 
-             * <Button 
-                            color="danger" 
-                            onClick={this.socketEvent}>SocketEvent
-                        </Button>  
-             */

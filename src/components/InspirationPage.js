@@ -87,7 +87,7 @@ class InspirationPage extends Component {
             return(
                 <div>
                 <div className="App-header">
-                    <h2>Inspiration page</h2>
+                    <h2>See inspirations from other users live!</h2>
                     <p>SocketTestData: {this.state.socketTestData}</p>
 
                 </div>
