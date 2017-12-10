@@ -47,6 +47,7 @@ export class LoginPage extends Component {
         .then(res => {
             if(res.status === 401) {
                 console.log("NO SUCH USER FROM CLIENT!")
+                window.alert(res.statusText);
                 throw 0; 
             } else {
                 console.log("USER FOUND, YEY!")

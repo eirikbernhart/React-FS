@@ -61,7 +61,9 @@ app.post('/usersAuth', (req, res) => {
     User.findOne({username: username})
         .then(user => {
             if (!bcrypt.compareSync(password, user.passwordHash)) {
-                res.status(401).send('wrong password');
+                const errMSG = "Wrong username or password!"
+                res.statusMessage = errMSG;         
+                res.status(401).send(errMSG);
             } else {
 
         // generate token
@@ -74,7 +76,9 @@ app.post('/usersAuth', (req, res) => {
         }
       })
       .catch(err => {
-        return res.status(401).send('no such user');
+        const errMSG = "Wrong username or password!"
+        res.statusMessage = errMSG;         
+        res.status(401).send(errMSG);
       })
   });
 
