@@ -23,13 +23,6 @@ import { setSocket } from '.././actions/socket';
 
 
 
-
-
-
-
-
-
-
 //const url = 'ws://localhost:1234';//Web-Socket related
 const socketUrl = 'http://localhost:1234';
 const socket = null;
@@ -50,43 +43,25 @@ export class MainPage extends Component {
         this.removeCarRedux = this.removeCarRedux.bind(this); //REDUX
         this.getAutomobilesRedux = this.getAutomobilesRedux.bind(this); //REDUX
         this.logoutRedux = this.logoutRedux.bind(this); //REDUX
-        //this.socketEvent = this.socketEvent.bind(this);
-        //this.initSocket = this.initSocket.bind(this);
+       
 
         this.state = {
             cars: [],
             socket: null,
-            //webSocket: [], //SOCKET: WebSocket-related
             timestamp: 'no timestamp yet',
-            testObject: 'empty', //SOCKET: Socket.IO-related
-            socketTestData: '', //SOCKET: Socket.IO-related
+            testObject: 'empty', 
+            socketTestData: '', 
         };
 
         
     }
 
-    //initSocket = () => { //ORIGINAL
-    /*initSocket() {
-        this.socket = io(socketUrl);
-        this.socket.on('connect', () => {
-            console.log(`User: ${this.props.auth.username} has connected, from MainPage`);
-            this.props.dispatch(setSocket({inSocket: this.socket}));
-
-            this.props.activeSocket.inSocket.on('testEvent', () => this.setState({socketTestData: 'TestData'})); //ORIGINAL            
-        });
-    }*/
-
+    
     componentWillMount() {
 
         if(this.props.auth.authenticated && !this.props.auth.visited) {
-
-            //WEBSOCKET: Socket.IO related TRY 
-            //this.initSocket();
-
             this.getAutomobilesRedux(); //REDUX
             this.props.dispatch(pageVisited({visited: true}));
-
-            
         }
     }
 
@@ -94,9 +69,7 @@ export class MainPage extends Component {
         
     }
 
-    componentWillUnmount() {
-        //localStorage.token = '';
-    }
+  
 
     getAutomobilesRedux() {
         const user = jwt.decode(localStorage.token, secret)
@@ -108,7 +81,7 @@ export class MainPage extends Component {
           }
         })
         .then(res => {
-          if(res.status === 200) { //NEEDS THIS CHECK BECAUSE FETCH FAILS WHILE USER IS UNAUTHENTICATED!
+          if(res.status === 200) { 
             return res = res.json();            
           }
         })
@@ -135,12 +108,16 @@ export class MainPage extends Component {
         body: JSON.stringify(automobile)
         })
         .then(res => {
+            if(res.status === 200) { 
+              return res = res.json();            
+            }
+          })
+        .then(res => {
             this.props.dispatch(addCar({
-                carName: automobile.name, 
-                id: automobile._id, 
-                isPublic: automobile.isPublic
+                carName: res.name, 
+                id: res._id, 
+                isPublic: res.isPublic
             }));
-            console.log("Ble staten oppdatert: " + JSON.stringify(this.state.cars));
         })
         .catch(err => document.write(err));
     }
@@ -182,13 +159,10 @@ export class MainPage extends Component {
     logoutRedux() {
         this.props.dispatch(unAuthenticateUser({userName: '', authenticated: false}));
         this.props.dispatch(clearCar());
-        //localStorage.token = '';
         this.props.history.push("/");
     }
 
-    /*socketEvent() {
-        this.props.activeSocket.inSocket.emit('testEvent');
-    }*/
+    
 
     
 
@@ -250,12 +224,7 @@ export class MainPage extends Component {
                         <Button 
                             color="danger" 
                             onClick={this.logoutRedux}>Log out
-                        </Button>  
-                        <Button 
-                            color="danger" 
-                            onClick={this.socketEvent}>SocketEvent
-                        </Button>  
-                        
+                        </Button>   
                 </div>
             )
         } else {

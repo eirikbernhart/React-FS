@@ -17,6 +17,7 @@ mongoose.connect('mongodb://eirik:testpass@ds113935.mlab.com:13935/automobiles')
 //mongoose.connect('mongodb://localhost/automobiles'); //Local db
 
 const secret = 'topsecret';
+const Schema = mongoose.Schema;
 
 //MODEL STRUCTURE
 const User = mongoose.model('users', {
@@ -29,7 +30,7 @@ const Automobile = mongoose.model('cars', {
     name: { type: String, required: true },
     price: { type: Number, required: true },
     owner: { type: String, required: true },
-    isPublic: { type: Boolean, required: true}
+    isPublic: { type: Boolean, required: true }
 });
 
 
@@ -147,9 +148,13 @@ app.post('/automobiles', (req, res) => {
     let car = new Automobile(body);
 
      car.save((err, savedCar) => {
+       
+
         if(err) {
             res.status(500).send(err);
         }
+        console.log("Posted car on server: " + JSON.stringify(savedCar));
+        console.log("Posted car on server: " + savedCar._id);
         res.send(savedCar);
     }); 
 });

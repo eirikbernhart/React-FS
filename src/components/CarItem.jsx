@@ -17,20 +17,9 @@ class CarItem extends Component {
         this.handleCheckBox = this.handleCheckBox.bind(this);
         this.findIndex = this.findIndex.bind(this);
         this.socketEvent = this.socketEvent.bind(this);
-        
-
-       
-
-        
-
     }
 
     componentWillMount() {
-        //console.log("Comp mount ran?");
-        //console.log("IS IT CHECKED AT START: " + JSON.stringify(this.props.car.isPublic));
-        //console.log("WHAT ARE PROPS.CARS: " + JSON.stringify(this.props.cars));
-        //props.car retrieves car different car obj twice, props.cars retrives an arr of car obj. FUNKY AF! HUH!
-        
             this.setState({
                 checked: this.props.car.isPublic
             })
@@ -42,7 +31,6 @@ class CarItem extends Component {
         this.props.removeCar(id);
     }
 
-    //AFTER HOURS OF HOURS... PLZ DON'T ASK WHY this.socketEvent() is called in this mysterious manner...
     handleCheckBox(e) {
         const target = e.target;
         let carID = this.props.car.id;
