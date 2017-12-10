@@ -20,7 +20,7 @@ const Schema = mongoose.Schema;
 
 //MODEL STRUCTURE
 const User = mongoose.model('users', {
-    username: {type: String, required: true},
+    username: {type: String, index: {unique: true }, dropDups: true, required: true},
     passwordHash: {type: String, required: true}
 })
 
@@ -92,12 +92,16 @@ app.post('/users', (req, res) => {
     let user = new User(newUser);
     user.save((err, savedUser) => {
         if(err) {
-            res.status(500).send(err);
+            const errMSG = "Username already exists! Please pick another username!"
+            res.statusMessage = errMSG;            
+            res.status(401).send(errMSG);
+        } else {
+            const token = jwt.encode({
+                username
+            }, secret);
+            res.send(token); 
         }
-        const token = jwt.encode({
-            username
-        }, secret);
-        res.send(token); 
+       
     })
 })
 

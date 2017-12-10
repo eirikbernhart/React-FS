@@ -104,7 +104,7 @@ export class MainPage extends Component {
         .then(res => {
             if(res.status === 200) { 
               return res = res.json();            
-            }
+            } 
           })
         .then(res => {
             this.props.dispatch(addCar({

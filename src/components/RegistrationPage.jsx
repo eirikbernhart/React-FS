@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { authenticateUser } from '../actions/auth';
 import { connect } from 'react-redux';
 
+
 const jwt = require('jwt-simple');
 
 class RegistrationPage extends Component {
@@ -13,73 +14,53 @@ class RegistrationPage extends Component {
         this.state = {
             username: '',
             password: '',
-            formIsOk: false
+            passIsOk: false,
+            usernameIsOk: false
         }
 
         this.registerUserRedux = this.registerUserRedux.bind(this); //REDUX
         this.handleUsername = this.handleUsername.bind(this);
         this.handlePassword = this.handlePassword.bind(this);
+        this.passValidator = this.passValidator.bind(this);
+        this.usernameValidator = this.usernameValidator.bind(this);
 
     }
-
-
-
-    registerUser() {
-        const urlNewUser = "http://localhost:1234/users"
-
-        const body = {
-                username: this.state.username,
-                password: this.state.password
-        }
-
-        fetch(urlNewUser, {
-            method: "POST",
-            headers: new Headers({
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-            }),
-            body: JSON.stringify(body)
-        })
-        .then(res => res.text())
-        .then(token => {
-            localStorage.token = token
-            console.log("Token from client: " + token);
-            if(localStorage.token) {
-                this.props.auth(true);
-                this.props.history.push("/main");
-            }
-        });
-        }
 
     registerUserRedux() {
+        
+            const secret = 'topsecret';
+            const urlNewUser = "http://localhost:1234/users"
     
-        const secret = 'topsecret';
-        const urlNewUser = "http://localhost:1234/users"
-
-        const body = {
-                username: this.state.username,
-                password: this.state.password
-        }
-
-        fetch(urlNewUser, {
-            method: "POST",
-            headers: new Headers({
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-            }),
-            body: JSON.stringify(body)
-        })
-        .then(res => res.text())
-        .then(token => {
-            localStorage.token = token
-            const user = jwt.decode(localStorage.token, secret)
-            if(localStorage.token) {
-                this.props.dispatch(authenticateUser({userName: user.username, authenticated: true}));
-                this.props.history.push("/main");
+            const body = {
+                    username: this.state.username,
+                    password: this.state.password
             }
-        });
-    }
-
+    
+            fetch(urlNewUser, {
+                method: "POST",
+                headers: new Headers({
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+                }),
+                body: JSON.stringify(body)
+            })
+            .then(res => {
+                if(res.status === 401) { 
+                    window.alert(res.statusText);
+                    throw 0;
+                } else {
+                    return res.text()
+                }
+            })
+            .then(token => {
+                localStorage.token = token
+                const user = jwt.decode(localStorage.token, secret)
+                if(localStorage.token) {
+                    this.props.dispatch(authenticateUser({userName: user.username, authenticated: true}));
+                    this.props.history.push("/main");
+                }
+            });
+        }
     handleUsername(e) {
         this.setState({
             username: e.target.value
@@ -92,22 +73,42 @@ class RegistrationPage extends Component {
         })
     }
 
+    passValidator() {
+        var passCheck;
+        if(this.state.password.length < 4) {
+            this.state.passIsOk = false;
+            return passCheck = ( 
+                <p>Password must be atleast 4 characters long!</p>
+            );
+        } 
+        if(this.state.password.length >= 4) {
+            this.state.passIsOk = true;
+            return passCheck = (
+                null
+            ) 
+        }
+    }
+
+    usernameValidator() {
+        var usernameCheck;
+        if(this.state.username.length < 4) {
+            this.state.usernameIsOk = false;
+            return usernameCheck = ( 
+                <p>Username must be atleast 4 characters long!</p>
+            );
+        } 
+        if(this.state.username.length >= 4) {
+            this.state.usernameIsOk = true;
+            return usernameCheck = (
+                null
+            ) 
+        }
+    }
+
+
     
 
      render() {
-
-        var passCheck;
-        if(this.state.password.length < 4) {
-            passCheck = ( 
-                <p>Password must be atleast 4 characters long!</p>
-            );
-        } else {
-            passCheck = (
-                null
-            )
-        }
-
-
 
          return (
             <div>
@@ -118,6 +119,7 @@ class RegistrationPage extends Component {
                     <FormGroup>
                         <Label for="userName">
                             <strong>Username</strong>
+                            {this.usernameValidator()}
                         </Label>
                         <Input 
                             type="username" 
@@ -131,7 +133,7 @@ class RegistrationPage extends Component {
                     <FormGroup>
                         <Label for="examplePassword">
                             <strong>Password</strong>
-                            {passCheck}
+                            {this.passValidator()}
                         </Label>
                         <Input 
                             type="password" 
@@ -144,8 +146,8 @@ class RegistrationPage extends Component {
                     <Button 
                         color="danger"
                         onClick={this.registerUserRedux} //REDUX
-                        //disabled={!this.state.formIsOk}
-                        disabled={false}
+                        disabled={!this.state.passIsOk || !this.state.usernameIsOk}
+                        //disabled={false}
                         >
                         Submit   
                     </Button>          
