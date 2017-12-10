@@ -27,7 +27,6 @@ import { setSocket } from '.././actions/socket';
 const socketUrl = 'http://localhost:1234';
 const socket = null;
 
-
 const urlAutomobiles = "http://localhost:1234/automobiles" //Needs token
 const jwt = require('jwt-simple');
 const secret = 'topsecret';
@@ -56,7 +55,6 @@ export class MainPage extends Component {
         
     }
 
-    
     componentWillMount() {
 
         if(this.props.auth.authenticated && !this.props.auth.visited) {
@@ -64,12 +62,6 @@ export class MainPage extends Component {
             this.props.dispatch(pageVisited({visited: true}));
         }
     }
-
-    componentDidMount() {
-        
-    }
-
-  
 
     getAutomobilesRedux() {
         const user = jwt.decode(localStorage.token, secret)
@@ -142,8 +134,6 @@ export class MainPage extends Component {
 
     makePublicOrPrivate(id){
 
-        //this.socketEvent();// DOESNT WORK FOR SOME REASON...
-
         fetch(`${urlAutomobiles}/${id}`, {
             method: "PUT",
             headers: new Headers({
@@ -158,16 +148,12 @@ export class MainPage extends Component {
             
     }
 
-
     logoutRedux() {
         this.props.dispatch(unAuthenticateUser({userName: '', authenticated: false}));
         this.props.dispatch(clearCar());
         this.props.history.push("/");
     }
 
-    
-
-    
 
 
      render() {
@@ -242,7 +228,6 @@ export class MainPage extends Component {
             )
         }
 
-
          return (
             <div>
                 {component}
@@ -253,6 +238,8 @@ export class MainPage extends Component {
 
 }
 
+
+
 function mapStateToProps(state) {
         return {
             cars: selectedCars(state.cars, state.filters),
@@ -261,7 +248,4 @@ function mapStateToProps(state) {
         };
 };
 
-
 export default connect(mapStateToProps)(MainPage);
-
-

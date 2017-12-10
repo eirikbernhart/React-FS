@@ -1,7 +1,3 @@
-
-
-
-
 const carsReducerDefaultState = [];
 
 export default (state = carsReducerDefaultState, action) => {
@@ -39,34 +35,3 @@ export default (state = carsReducerDefaultState, action) => {
 
 
 }
-
-/**
- * 
- * 
- * case 'MAKE_PUBLIC_X':
-            return {
-                ...state, car: 
-                {
-                    ...state.car, isPublic: true
-                }
-            }
-
- * case 'MAKE_PUBLIC_X1':
-            console.log("Får jeg ID i reducer: " + action.id);
-            console.log("HVA ER DENNE SJUKE STATEN: " + JSON.stringify(state[0].id));
-            let arr = state.map((currentItem, index) => {
-                if(currentItem.id === action.id) {
-                    console.log("FOUND THE CORRECT ITEM at index:  " + index);
-                    console.log("FOUND ITEM IS:  " + JSON.stringify(currentItem));
-                    
-                    return ((currentItem) => {
-                        console.log("HVA BLIR DET TIL SLUTT: " + JSON.stringify(currentItem))
-                    })
-                                                       
-                } else {
-                    
-                }
-        )
-    return state; //TESTING...
- * 
- */

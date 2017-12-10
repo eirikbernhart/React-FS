@@ -94,9 +94,7 @@ class RegistrationPage extends Component {
 
     
 
-
      render() {
-
 
         var passCheck;
         if(this.state.password.length < 4) {

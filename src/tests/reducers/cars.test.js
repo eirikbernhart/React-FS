@@ -1,8 +1,5 @@
-
-
 import carsReducer from '../../reducers/cars';
 import cars from  '../fixtures/cars';
-
 
 
 

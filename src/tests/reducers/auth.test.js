@@ -1,6 +1,5 @@
-
-
 import authReducer from '../../reducers/auth';
+
 
 
 test('should setup default auth-state', () => {

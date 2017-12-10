@@ -8,9 +8,6 @@ import configureStore from 'redux-mock-store'
 
 
 
-
-
-
 describe('should render "Not authorized" if user is not logged in', () => {
 
     const initialState = {
@@ -40,10 +37,4 @@ describe('should render "Not authorized" if user is not logged in', () => {
     it('+++ render the connected(SMART) component', () => {
 
     });
-    
-  
-
-    
-       
-   
 });

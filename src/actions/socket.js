@@ -1,7 +1,3 @@
-
-
-
-
 //Action: Set socket
 export const setSocket = ({inSocket} = {}) => ({
     type: 'SET_SOCKET',

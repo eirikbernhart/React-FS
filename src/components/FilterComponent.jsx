@@ -26,8 +26,6 @@ class FilterComponent extends Component {
             </div>
         )
     }
-
-
 }
 
 const mapStateToProps = (state) => {
@@ -35,5 +33,7 @@ const mapStateToProps = (state) => {
         filters: state.filters
     };
 };
+
+
 
 export default connect(mapStateToProps)(FilterComponent);

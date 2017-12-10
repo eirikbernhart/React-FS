@@ -1,6 +1,6 @@
-
-
 import selectCars from '../../selectors/cars';
+
+
 
 test('Should filter by text-value', () => {
 

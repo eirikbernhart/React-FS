@@ -1,5 +1,5 @@
-
 import { setTextFilter } from '../../actions/filters/';
+
 
 
 test('Should setup setTextFilter action object', () => {

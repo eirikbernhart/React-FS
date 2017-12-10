@@ -6,7 +6,6 @@ import { makePrivate } from '.././actions/cars';
 
 
 
-
 class CarItem extends Component {
 
     constructor(props) {
@@ -53,12 +52,7 @@ class CarItem extends Component {
             this.props.dispatch(makePrivate({index: index}));
             this.props.makePublicOrPrivate(carID);
             this.socketEvent();
-           
-            
         }
-        
-        
-
     }
 
     findIndex(carID){
@@ -75,6 +69,8 @@ class CarItem extends Component {
         console.log("SocketEvent called")
         this.props.activeSocket.inSocket.emit('testEvent');
     }
+
+
 
     render(props) {
         return (
@@ -100,10 +96,12 @@ class CarItem extends Component {
 }
 
 function mapStateToProps(state) {
-        return {
-            cars: state.cars,
-            activeSocket: state.activeSocket
-        };
+    return {
+        cars: state.cars,
+        activeSocket: state.activeSocket
+    };
 };
+
+
 
 export default connect(mapStateToProps)(CarItem);

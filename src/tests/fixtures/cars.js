@@ -1,5 +1,3 @@
-
-
 export default [
         {
             carName: 'BMW X6',

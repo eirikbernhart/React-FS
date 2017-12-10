@@ -1,6 +1,5 @@
-
-
 import { setSocket, clearSocket } from '../../actions/socket/';
+
 
 
 test('Should setup setSocket action object', () => {

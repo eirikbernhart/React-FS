@@ -1,6 +1,5 @@
-
-
 import filtersReducer from '../../reducers/filters';
+
 
 
 test('should setup default filter-state', () => {
@@ -10,7 +9,6 @@ test('should setup default filter-state', () => {
 
     })
 });
-
 
 test('should set  filter by text-values', () => {
     const text = 'Kewl';

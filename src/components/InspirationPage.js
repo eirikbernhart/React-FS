@@ -19,44 +19,16 @@ class InspirationPage extends Component {
         };
 
         this.getAutomobilesPublic = this.getAutomobilesPublic.bind(this); 
-        //this.init = this.init.bind(this);  
-
-        //this.init();
-
-        
         
     }
 
     componentDidMount() {   
-        
-        
       this.getAutomobilesPublic()
       this.props.activeSocket.inSocket.on('testEvent', () => 
-        this.getAutomobilesPublic(),
+           this.getAutomobilesPublic(),
       );
-     
-      console.log("Null?: " + this.props.activeSocket);
-
-      
-
-     
-      
-    
-      
-        
-    
-      
     };
     
-
-    
-
-    
-
-    
-
-   
-
     getAutomobilesPublic() {
         fetch(urlAutomobilesPublic, {
            
@@ -79,9 +51,9 @@ class InspirationPage extends Component {
     }
 
     
+
     render() {
-        
-        
+
         if(this.state.inspirations !== undefined) {
 
             return(
@@ -140,19 +112,3 @@ class InspirationPage extends Component {
 
 
 export default connect(mapStateToProps)(InspirationPage);
-/**
- * 
- * tbody>
-                        {this.state.inspirations.map((data, index) => (
-                            <tr key = {data.id}>
-                                <th scope="row">{index + 1}</th>
-                                     <td>
-                                        {data.name}
-                                    </td>
-                                    <td>
-                                        {data.owner}
-                                    </td>
-                            </tr>
-                        ))}        
-                        </tbody>
- */

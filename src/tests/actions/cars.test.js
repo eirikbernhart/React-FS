@@ -1,7 +1,3 @@
-
-
-
-
 import { addCar, removeCar, clearCar, makePublic, makePrivate } from '../../actions/cars/';
 
 
@@ -13,8 +9,6 @@ test('Should setup add_car action object', () => {
             price: 123321,
             id: 'HabaBaba',
             isPublic: false
-        
-        
     }
 
     const action = addCar(
@@ -25,8 +19,6 @@ test('Should setup add_car action object', () => {
             isPublic: false
         }
     );
-
-
 
     expect(action).toEqual({
         type: 'ADD_CAR',

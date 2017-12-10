@@ -1,7 +1,3 @@
-
-
-
-
 const userReducerDefaultState = {username : '', authenticated : false};
 
 export default (state = userReducerDefaultState, action) => {

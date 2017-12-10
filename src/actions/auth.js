@@ -1,7 +1,3 @@
-
-
-
-
 //Action: Authenticate user
 export const authenticateUser = 
 ({username, authenticated = false, visited = false} = 

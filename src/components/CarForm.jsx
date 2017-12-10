@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import './CarForm.css'
 
+
+
 const jwt = require('jwt-simple');
 const secret = 'topsecret';
+
+
 
 class CarForm extends Component {
     constructor(props) {
@@ -10,8 +14,6 @@ class CarForm extends Component {
 
         const user = jwt.decode(localStorage.token, secret)
         
-        console.log("JWT DECODED IN CLIENT, CarForm.JSX: " + JSON.stringify(user.username))
-
         this.state = {
             name: '',
             price: 1234,
@@ -20,8 +22,6 @@ class CarForm extends Component {
         };
         this.handleUserInput = this.handleUserInput.bind(this);
         this.writeNewCar = this.writeNewCar.bind(this);
-
-        
     }
 
     componentWillMount() {
@@ -41,6 +41,7 @@ class CarForm extends Component {
     }
 
     
+
     render() {
         return(
             <div className="formWrapper">
@@ -53,8 +54,8 @@ class CarForm extends Component {
             </div>
         )
     }
-
-
 }
+
+
 
 export default CarForm;

@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 const filtersReducerDefaultState = {
     text: ''
   };

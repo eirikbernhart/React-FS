@@ -1,7 +1,3 @@
-
-
-
-
 const carsReducerDefaultState = {inSocket: null};
 
 export default (state = carsReducerDefaultState, action) => {
@@ -22,6 +18,4 @@ export default (state = carsReducerDefaultState, action) => {
             default:
                     return state;
             }
-
-
 }

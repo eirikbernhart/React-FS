@@ -1,6 +1,3 @@
-
-
-
 //Action: Add car
 export const addCar = 
 ({carName = '', id = '', price = 0, isPublic = false} = {}) => ({

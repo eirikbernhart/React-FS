@@ -5,10 +5,10 @@ import { authenticateUser } from '../actions/auth';
 import { connect } from 'react-redux';
 
 
-  
 
 const urlUser = "http://localhost:1234/users";
 const jwt = require('jwt-simple');
+
 
 
 export class LoginPage extends Component {
@@ -69,8 +69,6 @@ export class LoginPage extends Component {
         });
     }
 
-
-
     handleUsername(e) {
         this.setState({
             username: e.target.value
@@ -82,8 +80,6 @@ export class LoginPage extends Component {
             password: e.target.value
         })
     }
-
-
 
 
 
@@ -125,10 +121,8 @@ export class LoginPage extends Component {
          )
     }
 
-    
-    
 
-
+    
 }
 
 

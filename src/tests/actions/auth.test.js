@@ -1,8 +1,6 @@
-
-
-
-
 import { authenticateUser, unAuthenticateUser, pageVisited } from '../../actions/auth/';
+
+
 
 test('Should setup authenticateUser_car action object', () => {
     const action = authenticateUser({ username: 'Zlad Supersonik', authenticated: true, visited: true});
@@ -14,8 +12,6 @@ test('Should setup authenticateUser_car action object', () => {
     });
 });
 
-
-
 test('Should setup UnAuthenticateUser_car action object', () => {
     const action = unAuthenticateUser({ username: 'Zlad Supersonik', authenticated: false, visited: false});
     expect(action).toEqual({
@@ -26,8 +22,6 @@ test('Should setup UnAuthenticateUser_car action object', () => {
     });
 });
 
-
-
 test('Should setup page_visited action object', () => {
     const action = pageVisited({visited: true});
     expect(action).toEqual({
@@ -36,6 +30,4 @@ test('Should setup page_visited action object', () => {
                 visited: true
             }
     });
-
-
 });

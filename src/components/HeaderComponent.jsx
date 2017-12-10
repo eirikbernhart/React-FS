@@ -5,14 +5,7 @@ import './HeaderComponent.css';
 
 
   
-
-
-
 class HeaderComponent extends Component {
-
-   
-
-    
      render() { 
 
         var linkStyle = {
@@ -34,8 +27,6 @@ class HeaderComponent extends Component {
             </div>
          )
     }
-
-
 }
 
 
