@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/automobiles');
+//mongoose.connect('mongodb://localhost/automobiles');
+mongoose.connect('mongodb://eirik:testpass@ds113935.mlab.com:13935/automobiles');  //Remote db
+
 
 const express = require('express');
 const app = express();
@@ -11,12 +13,13 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended : true }));
 
-const automobileSchema = new mongoose.Schema({
- name: { type: String, required: true },
- price: { type: Number, required: true },
+const Automobile = mongoose.model('cars', {
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    //owner: { type: String, required: true },
+    //isPublic: { type: Boolean, required: true }
 });
 
-const Automobile = mongoose.model('Car', automobileSchema);
 
 app.get('/automobiles', (req, res) => {
     Automobile.find((err, automobiles) => {
@@ -24,6 +27,7 @@ app.get('/automobiles', (req, res) => {
             res.status(500).send(err);
             return;
         }
+        console.log("Cars: " + automobiles);
         res.send(automobiles);
     })
 });
@@ -34,10 +38,10 @@ app.post('/automobiles', (req, res) => {
     let car = new Automobile(body);
      car.save((err, savedCar) => {
         if(err) {
-            console.log("body: " + JSON.stringify(body))
+            //console.log("body: " + JSON.stringify(body))
             res.status(500).send(err);
-            console.log("savedCar: " + savedCar)
         }
+        console.log("savedCar: " + savedCar)
         res.send(savedCar);
     });
 });

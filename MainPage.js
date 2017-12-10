@@ -16,7 +16,7 @@ import {
 import { StackNavigator } from 'react-navigation';
 
 const url = "http://10.0.0.133:1234/automobiles";
-
+//const url = "http://localhost:1234/automobiles";
 const carList = [];
 
 
@@ -41,7 +41,7 @@ export default class MainPage extends Component {
         this.removeCar = this.removeCar.bind(this);
         
       
-        this.fetchUser();
+        
         
         const datasource = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2});
         
@@ -49,7 +49,10 @@ export default class MainPage extends Component {
           cars: [],
           backUpCars: [],
           datasource: datasource.cloneWithRows(['dummy1', 'dummy2']),
+          carName: ''
         }
+
+        this.fetchUser();
       }
       
       
@@ -57,10 +60,13 @@ export default class MainPage extends Component {
       fetchUser() {
         fetch(url)
           .then(response => {
-           return response = response.json()
+           
+              return response = response.json()            
+            
           })
           .then(res => {
             carList = res;
+            console.log("Cars in client: " + carList);
             const newDatasource = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2});
             this.setState({
               datasource: newDatasource.cloneWithRows(carList),
@@ -221,6 +227,11 @@ export default class MainPage extends Component {
               <Text style={{borderWidth: 2, padding: 15, backgroundColor: 'gray', color:'black', 
               alignItems: 'center', justifyContent: 'center', marginTop: 100, 
               marginLeft: 5, marginRight: 5, borderRadius: 5}}>CARS IN WISHLIST: {carList.length}</Text>
+              <Button style={{backgroundColor: '#959faf'}}
+                    title="fetch"
+                    value=""
+                    onPress={this.fetchUser}
+                  />
               <ListView 
                 dataSource={this.state.datasource}
                 renderRow={this._renderRow}
